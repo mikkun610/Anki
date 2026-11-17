@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f7f6f3"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><title>漢文暗記</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f7f6f3"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><meta name="anki-app" content="1"><title>Anki</title>
 <style>
 :root{--ink:#1c2528;--muted:#637073;--bg:#f7f6f3;--card:#fff;--border:#dfdfdc;--accent:#17675f;--accentLite:#e7f2ef;--red:#b54843;--redLite:#fbecea;--sand:#eee9df}
 *{box-sizing:border-box}html{font-size:16px;color-scheme:light}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.5}button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{opacity:.5;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #79a8d0;outline-offset:2px}
@@ -26,221 +26,119 @@ select:disabled,input[type="text"]:disabled{opacity:1;color:#1c2528!important;-w
 .example-heading{font-size:14px;font-weight:600;color:var(--muted);line-height:1.5;margin:4px 0 10px;letter-spacing:normal}
 .exercise{overflow-anchor:none}.question-result{padding:9px 0;font-size:13px}.result-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}.result-head strong{font-size:12px}.result-head .btn.small{font-size:11px;padding:5px 8px;min-height:32px}.grade-ok{color:var(--accent)}.grade-ng{color:var(--red)}.result-answer{display:flex;align-items:baseline;gap:8px;border-radius:7px;padding:6px 8px;margin-top:4px;overflow-wrap:anywhere;line-height:1.5;white-space:pre-wrap}.result-answer>span{font-size:10px;flex-shrink:0;font-weight:500}.result-answer.is-correct{background:var(--accentLite);color:#1c5a50}.result-answer.is-wrong{background:var(--redLite);color:#8c3832}
 main{padding-bottom:84px}.record-toggle{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:calc(12px + env(safe-area-inset-bottom));z-index:30;display:flex;align-items:center;gap:7px;background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:24px;padding:8px 12px;min-height:40px;font-size:12px;font-weight:700;box-shadow:0 2px 12px #0002}.toggle-track{display:inline-block;width:27px;height:16px;border-radius:12px;background:var(--accent);padding:2px;box-sizing:border-box}.toggle-track>span{display:block;width:12px;height:12px;border-radius:50%;background:white;transform:translateX(11px)}.record-toggle.is-off{background:#fff7ed;border-color:#d6b788}.record-toggle.is-off .toggle-track{background:#9a958d}.record-toggle.is-off .toggle-track>span{transform:translateX(0)}.study-filters{border-top:1px solid var(--border);margin-top:12px;padding-top:12px}.filter-main{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filter-main label,.filter-fields label{font-size:12px;font-weight:700;display:grid;gap:5px;min-width:0}.filter-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}.filter-fields select,.filter-fields input{width:100%;font-size:13px}.study-filters summary{font-size:13px;cursor:pointer;margin-top:12px}.filter-checks{display:grid;gap:8px}.filter-checks label{display:flex;gap:8px;align-items:center;font-size:12px;min-height:32px}.filter-checks input{width:17px;height:17px;accent-color:var(--accent);flex-shrink:0}.memory-status{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11px;color:var(--muted);padding:6px 0 0}.study-filters p{margin-bottom:0}
+.deck-select{max-width:58vw;font-size:13px;font-weight:700;padding:6px 8px;border:1px solid var(--border);border-radius:9px}
+.field-image{display:block;max-width:100%;height:auto;max-height:180px;object-fit:contain;background:#fff;border-radius:8px}
+.quizword .prompt-image{max-height:260px;margin:0 auto}
+.choices.image-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.image-choices .choice{padding:8px;gap:6px}.image-choices .choice>span{display:flex;align-items:flex-start;gap:4px;flex:1;min-width:0}.result-answer:has(.field-image){align-items:flex-start}
+.image-choices .field-image{max-height:120px;flex:1;min-width:0}
+.correct-answer .field-image,.result-answer .field-image{max-height:150px}
+.list-image{max-height:110px;display:inline-block;vertical-align:middle}
 </style></head><body>
-<header><div class="shell head-row"><div class="brand">漢文暗記</div><div class="version">プリント2枚・オフライン版</div></div></header><div class="shell" style="padding:8px 18px 0;font-size:12px;color:var(--muted)" id="saveStatus" role="status" aria-live="polite">学習データを読み込み中…</div>
-<nav aria-label="メニュー"><button data-tab="quiz" class="active">テスト</button><button data-tab="words">語句一覧</button><button data-tab="progress">習熟度</button></nav>
+<header><div class="shell head-row"><div class="brand">Anki</div><div class="version" id="deckSlot"></div></div></header><div class="shell" style="padding:8px 18px 0;font-size:12px;color:var(--muted)" id="saveStatus" role="status" aria-live="polite">学習データを読み込み中…</div>
+<nav aria-label="メニュー"><button data-tab="quiz" class="active">テスト</button><button data-tab="words">一覧</button><button data-tab="progress">習熟度</button></nav>
 <main id="app"></main><button id="recordToggle" type="button" role="switch" aria-label="学習記録を残す" aria-checked="true" class="record-toggle"><span class="toggle-track"><span></span></span>記録する</button>
-<dialog id="editor"><form method="dialog" id="editForm"><h3 style="margin:0">語句を修正</h3><p class="notice">修正した内容はこの端末内に保存されます。</p><label for="editWord">語句</label><input id="editWord" type="text" required><label for="editReading">読み</label><input id="editReading" type="text" required><label for="editMeaning">意味</label><input id="editMeaning" type="text" required><div class="flex" style="margin-top:20px"><button type="button" class="btn grow" id="editCancel">キャンセル</button><button type="submit" class="btn primary grow" value="save">保存</button></div></form></dialog>
-<script id="seed" type="application/json">[["表","名詞","君子","くんし","有徳の人"],["表","名詞","小人","せうじん（しょうじん）","人格の低い人"],["表","名詞","百姓","ひゃくせい（ひゃくせい）","人々"],["表","名詞","人間","じんかん","世間"],["表","名詞","海内","かいだい","天下・世界"],["表","名詞","故人","こじん","旧友"],["表","名詞","寡人","くわじん（かじん）","私（諸侯の自称）"],["表","名詞","字","あざな","普段使用する名"],["表","名詞","夫子","ふうし","先生"],["表","名詞","子","し","あなた・先生"],["表","名詞","爾・而・女","なんぢ","お前"],["表","名詞","臣","しん","私（家臣の自称）"],["表","名詞","妾","せふ（しょう）","私（女性の自称）"],["表","名詞","所以","ゆゑん","理由・もの・こと"],["表","名詞","城","しろ","町"],["表","名詞","左右","さいう（さゆう）","側近"],["表","動詞","為","なス","する"],["表","動詞","為（作る）","つくル","作る"],["表","動詞","見（まみえる）","まみユ","謁見する・お会いする"],["表","動詞","見（現れる）","あらはル・あらはス","現れる・現す"],["表","動詞","之・如","ゆク","行く"],["表","動詞","対曰","こたヘテいハク","お答えして言った"],["表","動詞","説","よろこブ","喜ぶ"],["表","動詞","已","やム","終わる"],["表","動詞","応","こたフ","答える"],["表","動詞","反","かへル","返る"],["表","動詞","易（換える）","かフ・かハル","換える・変わる"],["表","動詞","卒","しゅっス","身分の高い人が死ぬ"],["表","動詞","如・若（及ぶ）","しク","及ぶ"],["表","動詞","足","たル","充分だ・足りる"],["表","動詞","適（通る）","よぎル・すグ","通りかかる"],["表","動詞","悪（嫌う）","にくム","嫌う"],["表","動詞","食","やしなフ","育てる"],["表","動詞","中","あたル・あツ","的中する・当てる"],["表","動詞","肯","がへんズ","肯定する・承諾する"],["表","動詞","欲","〜ントほっス","〜しようとする"],["表","動詞","与（仲間になる）","くみス","仲間になる"],["表","動詞","与（一緒に）","ともニス","一緒に〜する"],["表","動詞","与（関係）","あづかル","関係する・関与する"],["表","形容詞","易","やすシ","簡単だ"],["表","形容詞","少","わかシ","若い"],["表","形容詞","寡","すくなシ","少ない"],["表","形容詞","衆","おほシ","多い"],["表","形容詞","莫・勿・無（ない）","なシ","〜がない"],["表","形容詞","莫・勿・無（禁止）","なカレ","〜するな（禁止）"],["表","接続詞","以","もつテ・もツテ","〜で・〜のために"],["表","接続詞","雖","〜トいへどモ","〜と言っても"],["表","接続詞","因","よりテ","よって"],["表","接続詞","故","ゆゑニ","だから"],["表","接続詞","於是","ここニおイテ","そこで"],["表","接続詞","是以","ここヲもつテ","こういうわけで"],["表","接続詞","以是","これヲもつテ","これによって"],["表","接続詞","然後","しかルのちニ","その後で"],["表","接続詞","然則","しかラバすなはチ","そうだとすれば"],["表","接続詞","然","しかルニ","それなのに"],["表","接続詞","乃・則","すなはチ","そこで・そのたびごとに"],["表","接続詞","而①","しか（う）シテ","そして"],["表","接続詞","而②","しかレドモ","けれども"],["表","接続詞","而③","しかルニ","けれども"],["表","接続詞","而④","しかモ","けれども"],["表","接続詞","則","すなはチ","すぐに・つまり"],["表","副詞","亦","〜モまた","〜もまた"],["表","副詞","復","まタ","二回目・再び"],["表","副詞","暫","しばらク","すこしの間"],["表","副詞","遂","つひニ","そのまま・とうとう"],["表","副詞","卒・終","つひニ","とうとう"],["表","副詞","若・如（仮定）","もシ〜バ","もし〜なら"],["表","副詞","徒","いたづらニ","無駄に"],["表","副詞","各","おのおの","おのおの"],["表","副詞","交","こもごも","交互に・互いに"],["表","副詞","数","しばしば","しばしば"],["表","副詞","偶・適","たまたま","たまたま"],["表","副詞","須","すべからク","必ず〜する必要がある"],["表","副詞","独","ひとリ〜ノミ","一人・ただ〜だけ"],["表","副詞","直","たダ〜ノミ","ただ〜だけだ"],["表","副詞","特・唯・惟","たダ〜ノミ","ただ〜だけだ"],["表","反語・疑問","寧","いづクンゾ・なんゾ","どうして〜か"],["表","反語・疑問","安・悪・焉","いづクンゾ","どこに・どうして"],["表","反語・疑問","何処","いづレノところカ","どこに"],["表","反語・疑問","誰・孰","たれカ","だれか"],["表","反語・疑問","孰","いづれゾ","どちらか"],["表","反語・疑問","幾何","いくばくゾ","どれほどか"],["表","反語・疑問","如何・奈何","いかん（セン）","どうしたらよいか"],["表","反語・疑問","何如・何若","いかん","どうであるか"],["裏","副詞","方","まさニ","ちょうど"],["裏","副詞","遍","あまねク","広く・一般に"],["裏","副詞","尽","ことごとク","全て"],["裏","副詞","具","つぶさニ","細かく"],["裏","副詞","能","よク","〜できる"],["裏","副詞","固","もとヨリ","もともと"],["裏","副詞","苟①","いやしくモ〜バ","もし仮にも〜なら"],["裏","副詞","私","ひそかニ","密かに"],["裏","副詞","為","ためニ","〜のために"],["裏","副詞","偶・適","たまたま","たまたま"],["裏","副詞","甚","はなはダ","甚だしく"],["裏","副詞","肯","あへテ","進んで〜する"],["裏","副詞","縦","たとヒ〜トモ","たとえ〜としても"],["裏","副詞","蓋","けだシ","思うに"],["裏","副詞","況〜乎","いはンヤ〜ヲや","まして〜はなおさらだ"],["裏","副詞","自①","おのづから","自然に"],["裏","副詞","自②","みづから","自分から"],["裏","副詞","已①","すでニ","すでに"],["裏","副詞","已②","すでニシテ","やがて"],["裏","副詞","夫","そレ","そもそも"],["裏","副詞","嘗","かつテ","以前"],["裏","助詞","邪・哉","かな","〜だなあ（詠嘆）"],["裏","助詞","耳・爾・已","のみ","〜だけだ（限定）"],["裏","助詞","自・従","より","〜から（起点）"],["裏","助詞","与①","と","〜と（比較）"],["裏","助詞","与②","より","〜より（起点）"],["裏","助詞","者","〜は","主語などの強調"],["裏","助動詞","可","べシ","①可能②当然③適当"],["裏","助動詞","不可","べカラず","〜できない・〜してはならない"],["裏","助動詞","如・若","〜（ノ・ガ）ごとシ","〜のようだ"],["裏","助動詞","非・匪","〜ニあらズ","〜ではない"],["裏","助動詞","也","なり","〜である"],["裏","助動詞","見・被","る・らル","〜される（受身）"],["裏","助動詞","使・令","〜（ヲシテ）〜しム","〜に〜させる（使役）"],["裏","熟語","不必","かならズシモ〜ず","必ず〜とは限らない"],["裏","熟語","必不","かならズ〜ず","必ず〜ない"],["裏","熟語","不常","つねニハ〜ず","常に〜とは限らない"],["裏","熟語","常不","つねニ〜ず","常に〜ない"],["裏","熟語","不如・不若","〜ニしかず","〜には及ばない"],["裏","熟語","無如・無若","〜ニしくハなシ","〜に及ぶものはない"],["裏","熟語","莫如・莫若","〜ニしくハなシ","〜に及ぶものはない"],["裏","熟語","不敢","あへテ〜ず","決して〜ない"],["裏","熟語","敢不","あへテ〜ざランヤ","どうして〜しないのか"],["裏","熟語","不得","〜ヲえず","〜できない"],["裏","熟語","不勝","〜ニたへず","〜することができない"],["裏","熟語","以為","おもへラク","①思うに②〜を〜にする"],["裏","熟語","所謂","いはゆる","いわゆる"],["裏","熟語","非無","〜なキニあらズ","〜ないわけではない"],["裏","熟語","非不","〜セざルニあらズ","〜しないわけではない"],["裏","熟語","無非","〜ニあらザルはなシ","〜でないものはない"],["裏","熟語","無不","〜セざルはなシ","〜しないものはない"],["裏","再読文字","未","いまダ〜ず","まだ〜ない"],["裏","再読文字","応","まさニ〜べシ","きっと〜だろう"],["裏","再読文字","当","まさニ〜べシ","当然〜すべきだ"],["裏","再読文字","将","まさニ〜ントす","今〜しようとしている"],["裏","再読文字","且","まさニ〜ントす","今にも〜しそうだ"],["裏","再読文字","宜","よろシク〜べシ","〜がよい"],["裏","再読文字","須","すべからク〜べシ","〜する必要がある"],["裏","再読文字","猶","なホ〜（ノ・ガ）ごとシ","ちょうど〜のようだ"],["裏","再読文字","由","なホ〜（ノ・ガ）ごとシ","ちょうど〜のようだ"],["裏","再読文字","盍","なんゾ〜ざル","どうして〜しないのか"],["裏","熟語","如何・奈何","いかん（セン）","どうしたらよいか"],["裏","熟語","如此・若是","かくノごとシ","このようだ"],["裏","熟語","為A所B","AノBスル所ト為ル","AにBされる（受身）"],["裏","熟語","A且（尚）B","Aスラかツ（なホ）B","AでさえBだ"],["裏","熟語","況C〜乎","いはンヤCヲや","ましてCはなおさらだ"],["裏","熟語","噫・嗟","ああ","ああ（感動詞）"],["裏","熟語","鳴呼・于嗟","ああ","ああ（感動詞）"],["裏","熟語","不期年","期年ナラずシテ","一年経たないうちに"],["裏","熟語","夫","かノ","あの・この・その"],["裏","熟語","諸","これヲ","これを"],["裏","熟語","A孰与B","AハBニいづれゾ","AはBに比べてどうか"],["裏","熟語","秦人","しん（国名）ひと","秦の国の人"],["裏","熟語","今者","いま","今"],["裏","熟語","昔者","むかし","昔"],["裏","熟語","若此・若其","かくノごとシ","このようだ"],["裏","熟語","若之・若斯","かくノごとシ","このようだ"],["裏","熟語","如其・如之","かくノごとシ","このようだ"]]</script>
-<script id="exampleSeed" type="application/json">{
-  "1": {"text":"{{}}修徳。","translation":"徳のある人が徳を修める。","source":"自作（学習用）","kakikudashi":"君子、徳を修む。","reading":"くんし","meaning":"徳のある人"},
-  "2": {"text":"{{}}好利。","translation":"人格の低い人は利益を好む。","source":"自作（学習用）","kakikudashi":"小人、利を好む。","reading":"せうじん","meaning":"人格の低い人"},
-  "3": {"text":"{{}}皆喜。","translation":"人々はみな喜ぶ。","source":"自作（学習用）","kakikudashi":"百姓、皆喜ぶ。","reading":"ひゃくせい","meaning":"人々"},
-  "4": {"text":"{{}}多患。","translation":"世間には心配事が多い。","source":"自作（学習用）","kakikudashi":"人間、患ひ多し。","reading":"じんかん","meaning":"世間"},
-  "5": {"text":"{{}}皆安。","translation":"天下はすべて平穏である。","source":"自作（学習用）","kakikudashi":"海内、皆安し。","reading":"かいだい","meaning":"天下"},
-  "6": {"text":"{{}}来訪。","translation":"旧友が訪ねて来る。","source":"自作（学習用）","kakikudashi":"故人、来訪す。","reading":"こじん","meaning":"旧友"},
-  "7": {"text":"{{}}願聞其説。","translation":"私はその説明を聞きたい。","source":"自作（学習用）","kakikudashi":"寡人、其の説を聞かんことを願ふ。","reading":"くわじん","meaning":"私"},
-  "8": {"text":"其{{}}子明。","translation":"その人の成人後の呼び名は子明である。","source":"自作（学習用）","kakikudashi":"其の字は子明なり。","reading":"あざな","meaning":"成人後の呼び名"},
-  "9": {"text":"{{}}教我。","translation":"先生が私を教える。","source":"自作（学習用）","kakikudashi":"夫子、我を教ふ。","reading":"ふうし","meaning":"先生"},
-  "10": {"text":"{{}}何之。","translation":"あなたはどこへ行くのか。","source":"自作（学習用）","kakikudashi":"子、何くにか之く。","reading":"し","meaning":"あなた"},
-  "11": {"text":"{{}}知之乎。","translation":"お前はそれを知っているか。","source":"自作（学習用）","kakikudashi":"なんぢ、之を知るか。","reading":"なんぢ","meaning":"お前"},
-  "12": {"text":"{{}}願尽力。","translation":"私は力を尽くしたい。","source":"自作（学習用）","kakikudashi":"臣、力を尽くさんことを願ふ。","reading":"しん","meaning":"私"},
-  "13": {"text":"{{}}不知。","translation":"私は知らない。","source":"自作（学習用）","kakikudashi":"妾、知らず。","reading":"せふ","meaning":"私"},
-  "14": {"text":"此成功之{{}}也。","translation":"これが成功した理由である。","source":"自作（学習用）","kakikudashi":"此れ成功の所以なり。","reading":"ゆゑん","meaning":"理由"},
-  "15": {"text":"敵囲其{{}}。","translation":"敵がその城壁に囲まれた町を包囲する。","source":"自作（学習用）","kakikudashi":"敵、其の城を囲む。","reading":"しろ","meaning":"城壁に囲まれた町"},
-  "16": {"text":"王問{{}}。","translation":"王が側近に尋ねる。","source":"自作（学習用）","kakikudashi":"王、左右に問ふ。","reading":"さいう","meaning":"側近"},
-  "17": {"text":"学者{{}}善。","translation":"学ぶ者が善いことをする。","source":"自作（学習用）","kakikudashi":"学者、善を為す。","reading":"なス","meaning":"行う"},
-  "18": {"text":"工人{{}}舟。","translation":"職人が舟を作る。","source":"自作（学習用）","kakikudashi":"工人、舟をつくる。","reading":"つくル","meaning":"作る"},
-  "19": {"text":"客{{}}王。","translation":"客が王にお目にかかる。","source":"自作（学習用）","kakikudashi":"客、王に見ゆ。","reading":"まみユ","meaning":"お目にかかる"},
-  "20": {"text":"雲散而月{{}}。","translation":"雲が散って月が現れる。","source":"自作（学習用）","kakikudashi":"雲散じて月現る。","reading":"あらはル","meaning":"現れる"},
-  "21": {"text":"吾{{}}楚。","translation":"私は楚の国へ行く。","source":"自作（学習用）","kakikudashi":"吾、楚にゆく。","reading":"ゆク","meaning":"行く"},
-  "22": {"text":"臣{{}}、不知。","translation":"家臣はお答えして「知りません」と言った。","source":"自作（学習用）","kakikudashi":"臣対へて曰はく、「知らず」と。","reading":"こたヘテいハク","meaning":"お答えして言った"},
-  "23": {"text":"学而時習之、不亦{{}}乎。","translation":"学んで折にふれて復習するのは、やはりうれしいことではないか。","source":"論語・学而（字体を調整）","url":"https://ctext.org/analects/xue-er","kakikudashi":"学びて時に之を習ふ、亦た説ばしからずや。","reading":"よろこバシ","meaning":"うれしい"},
-  "24": {"text":"風雨既{{}}。","translation":"風雨はすでにやんだ。","source":"自作（学習用）","kakikudashi":"風雨、既に已む。","reading":"やム","meaning":"やむ"},
-  "25": {"text":"問之而不{{}}。","translation":"尋ねても答えない。","source":"自作（学習用）","kakikudashi":"之に問ひて応へず。","reading":"こたフ","meaning":"答える"},
-  "26": {"text":"客{{}}故郷。","translation":"旅人が故郷へ帰る。","source":"自作（学習用）","kakikudashi":"客、故郷に反る。","reading":"かへル","meaning":"帰る"},
-  "27": {"text":"以羊{{}}牛。","translation":"羊と牛を取り換える。","source":"自作（学習用）","kakikudashi":"羊を以て牛に易ふ。","reading":"かフ","meaning":"取り換える"},
-  "28": {"text":"大夫{{}}於家。","translation":"大夫が家で亡くなった。","source":"自作（学習用）","kakikudashi":"大夫、家に卒す。","reading":"しゅっス","meaning":"亡くなる"},
-  "29": {"text":"吾不{{}}彼。","translation":"私は彼に及ばない。","source":"自作（学習用）","kakikudashi":"吾、彼にしかず。","reading":"しク","meaning":"及ぶ"},
-  "30": {"text":"衣食皆{{}}。","translation":"衣服と食べ物はどちらも十分である。","source":"自作（学習用）","kakikudashi":"衣食、皆足る。","reading":"たル","meaning":"十分である"},
-  "31": {"text":"吾{{}}其門。","translation":"私はその門の前を通りかかる。","source":"自作（学習用）","kakikudashi":"吾、其の門をよぎる。","reading":"よぎル","meaning":"通りかかる"},
-  "32": {"text":"君子{{}}不義。","translation":"徳のある人は不義を憎む。","source":"自作（学習用）","kakikudashi":"君子、不義を悪む。","reading":"にくム","meaning":"憎む"},
-  "33": {"text":"父{{}}其子。","translation":"父がその子を養う。","source":"自作（学習用）","kakikudashi":"父、其の子をやしなふ。","reading":"やしなフ","meaning":"養う"},
-  "34": {"text":"矢{{}}的。","translation":"矢が的に当たる。","source":"自作（学習用）","kakikudashi":"矢、的に中たる。","reading":"あたル","meaning":"当たる"},
-  "35": {"text":"衆皆{{}}之。","translation":"人々はみなそれを承諾する。","source":"自作（学習用）","kakikudashi":"衆、皆之を肯んず。","reading":"がへんズ","meaning":"承諾する"},
-  "36": {"text":"吾{{}}帰。","translation":"私は帰ろうと思う。","source":"自作（学習用）","kakikudashi":"吾、帰らんと欲す。","reading":"〜ントほっス","meaning":"〜しようと思う"},
-  "37": {"text":"吾{{}}此人。","translation":"私はこの人に味方する。","source":"自作（学習用）","kakikudashi":"吾、此の人にくみす。","reading":"くみス","meaning":"味方する"},
-  "38": {"text":"願{{}}学。","translation":"一緒に学びたい。","source":"自作（学習用）","kakikudashi":"願はくは与に学ばん。","reading":"ともニ","meaning":"一緒に"},
-  "39": {"text":"吾不{{}}此事。","translation":"私はこの件には関与しない。","source":"自作（学習用）","kakikudashi":"吾、此の事にあづからず。","reading":"あづかル","meaning":"関与する"},
-  "40": {"text":"此事甚{{}}。","translation":"この仕事はとても簡単である。","source":"自作（学習用）","kakikudashi":"此の事、甚だ易し。","reading":"やすシ","meaning":"簡単だ"},
-  "41": {"text":"其人尚{{}}。","translation":"その人はまだ若い。","source":"自作（学習用）","kakikudashi":"其の人、尚ほわかし。","reading":"わかシ","meaning":"若い"},
-  "42": {"text":"友人甚{{}}。","translation":"友人がとても少ない。","source":"自作（学習用）","kakikudashi":"友人、甚だすくなし。","reading":"すくなシ","meaning":"少ない"},
-  "43": {"text":"来者甚{{}}。","translation":"来る者がとても多い。","source":"自作（学習用）","kakikudashi":"来たる者、甚だ衆し。","reading":"おほシ","meaning":"多い"},
-  "44": {"text":"室中{{}}人。","translation":"部屋の中には人がいない。","source":"自作（学習用）","kakikudashi":"室中、人なし。","reading":"なシ","meaning":"〜がいない","forms":{"莫":{"text":"{{}}知此事。","kakikudashi":"此の事を知る者なし。","translation":"このことを知る者はいない。","meaning":"〜する者がいない"},"勿":{"text":"愛之、能{{}}労乎。","kakikudashi":"之を愛して、能く労すること勿からんや。","translation":"その人を大切に思うなら、苦労させずにいられるだろうか。","meaning":"〜しない","source":"『論語』憲問","url":"https://ja.wikisource.org/wiki/%E8%AB%96%E8%AA%9E_(%E5%9C%8B%E8%AD%AF%E6%BC%A2%E6%96%87%E5%A4%A7%E6%88%90)/%E6%86%B2%E5%95%8F%E7%AC%AC%E5%8D%81%E5%9B%9B"}}},
-  "45": {"text":"{{}}忘父母。","translation":"父母を忘れてはならない。","source":"自作（学習用）","kakikudashi":"父母を忘るることなかれ。","reading":"なカレ","meaning":"〜してはいけない"},
-  "46": {"text":"{{}}筆書字。","translation":"筆で文字を書く。","source":"自作（学習用）","kakikudashi":"筆を以て字を書く。","reading":"もツテ","meaning":"〜を使って"},
-  "47": {"text":"{{}}貧、不失志。","translation":"貧しくても志を失わない。","source":"自作（学習用）","kakikudashi":"貧しと雖も、志を失はず。","reading":"〜トいへどモ","meaning":"〜であっても"},
-  "48": {"text":"王問其故、臣{{}}告之。","translation":"王が理由を尋ねた。そこで家臣はそれを告げた。","source":"自作（学習用）","kakikudashi":"王、其の故を問ひ、臣、因りて之を告ぐ。","reading":"よりテ","meaning":"そこで"},
-  "49": {"text":"雨甚、{{}}不行。","translation":"雨が激しいので、出かけない。","source":"自作（学習用）","kakikudashi":"雨甚だし、故に行かず。","reading":"ゆゑニ","meaning":"だから"},
-  "50": {"text":"{{}}衆皆去。","translation":"そこで人々はみな去った。","source":"自作（学習用）","kakikudashi":"是に於いて衆皆去る。","reading":"ここニおイテ","meaning":"そこで"},
-  "51": {"text":"{{}}吾知其賢。","translation":"こういうわけで私は彼が賢いと分かる。","source":"自作（学習用）","kakikudashi":"ここを以て吾、其の賢なるを知る。","reading":"ここヲもつテ","meaning":"こういうわけで"},
-  "52": {"text":"観其行、{{}}知其心。","translation":"その人の行いを見て、これによってその心を知る。","source":"自作（学習用）","kakikudashi":"其の行ひを観て、これを以て其の心を知る。","reading":"これヲもつテ","meaning":"これによって"},
-  "53": {"text":"学成、{{}}帰。","translation":"学問を修め、その後で帰る。","source":"自作（学習用）","kakikudashi":"学成り、然る後に帰る。","reading":"しかルのちニ","meaning":"その後で"},
-  "54": {"text":"{{}}何為。","translation":"そうだとすれば、どうするのか。","source":"自作（学習用）","kakikudashi":"然らば則ち何をか為さん。","reading":"しかラバすなはチ","meaning":"そうだとすれば"},
-  "55": {"text":"言善、{{}}行悪。","translation":"言葉は善いのに、行いは悪い。","source":"自作（学習用）","kakikudashi":"言は善し、然るに行ひは悪し。","reading":"しかルニ","meaning":"それなのに"},
-  "56": {"text":"聞之、{{}}起。","translation":"それを聞くと、そこで立ち上がった。","source":"自作（学習用）","kakikudashi":"之を聞き、すなはち起つ。","reading":"すなはチ","meaning":"そこで"},
-  "57": {"text":"学{{}}思。","translation":"学んで、そして考える。","source":"自作（学習用）","kakikudashi":"学び、しかうして思ふ。","reading":"しかうシテ","meaning":"そして"},
-  "58": {"text":"貧{{}}好学。","translation":"貧しいけれども学問を好む。","source":"自作（学習用）","kakikudashi":"貧し、しかれども学を好む。","reading":"しかレドモ","meaning":"けれども"},
-  "59": {"text":"人皆去、{{}}我独留。","translation":"人々はみな去ったが、私は一人とどまった。","source":"自作（学習用）","kakikudashi":"人皆去る、而るに我独り留まる。","reading":"しかルニ","meaning":"けれども"},
-  "60": {"text":"欲進{{}}不能。","translation":"進みたいが、進めない。","source":"自作（学習用）","kakikudashi":"進まんと欲す、しかも能はず。","reading":"しかモ","meaning":"けれども"},
-  "61": {"text":"聞過{{}}改。","translation":"過ちを聞くとすぐに改める。","source":"自作（学習用）","kakikudashi":"過ちを聞けば則ち改む。","reading":"すなはチ","meaning":"すぐに"},
-  "62": {"text":"学而時習之、不{{}}説乎。","translation":"学んで折にふれて復習するのは、やはりうれしいことではないか。","source":"論語・学而（字体を調整）","url":"https://ctext.org/analects/xue-er","kakikudashi":"学びて時に之を習ふ、亦た説ばしからずや。","reading":"まタ","meaning":"やはり"},
-  "63": {"text":"故人{{}}来。","translation":"旧友が再び来る。","source":"自作（学習用）","kakikudashi":"故人、復た来たる。","reading":"まタ","meaning":"再び"},
-  "64": {"text":"{{}}止於此。","translation":"少しの間ここにとどまる。","source":"自作（学習用）","kakikudashi":"暫く此に止まる。","reading":"しばらク","meaning":"少しの間"},
-  "65": {"text":"久学、{{}}成業。","translation":"長く学んで、とうとう成し遂げた。","source":"自作（学習用）","kakikudashi":"久しく学び、遂に業を成す。","reading":"つひニ","meaning":"とうとう"},
-  "66": {"text":"衆人議之、事{{}}定。","translation":"人々が議論し、とうとうその件が決まった。","source":"自作（学習用）","kakikudashi":"衆人、之を議し、事つひに定まる。","reading":"つひニ","meaning":"とうとう"},
-  "67": {"text":"{{}}有暇、則来。","translation":"もし暇があるなら、来なさい。","source":"自作（学習用）","kakikudashi":"もし暇有らば、則ち来たれ。","reading":"もシ〜バ","meaning":"もし〜なら"},
-  "68": {"text":"{{}}費日月。","translation":"むだに月日を費やす。","source":"自作（学習用）","kakikudashi":"徒らに日月を費やす。","reading":"いたづらニ","meaning":"むだに"},
-  "69": {"text":"衆人{{}}言其志。","translation":"人々がそれぞれ自分の志を述べる。","source":"自作（学習用）","kakikudashi":"衆人、おのおの其の志を言ふ。","reading":"おのおの","meaning":"それぞれ"},
-  "70": {"text":"賓主{{}}相勧酒。","translation":"客と主人が交互に酒を勧め合う。","source":"自作（学習用）","kakikudashi":"賓主、交も相ひ酒を勧む。","reading":"こもごも","meaning":"交互に"},
-  "71": {"text":"故人{{}}来訪。","translation":"旧友がしばしば訪ねて来る。","source":"自作（学習用）","kakikudashi":"故人、数しば来訪す。","reading":"しばしば","meaning":"しばしば"},
-  "72": {"text":"{{}}遇故人。","translation":"たまたま旧友に出会った。","source":"自作（学習用）","kakikudashi":"たまたま故人に遇ふ。","reading":"たまたま","meaning":"偶然"},
-  "73": {"text":"{{}}読此書。","translation":"必ずこの本を読む必要がある。","source":"自作（学習用）","kakikudashi":"須らく此の書を読むべし。","reading":"すべからク〜べシ","meaning":"〜する必要がある"},
-  "74": {"text":"衆皆去、吾{{}}留。","translation":"人々はみな去り、私だけがとどまる。","source":"自作（学習用）","kakikudashi":"衆皆去り、吾独り留まる。","reading":"ひとリ","meaning":"ただ一人"},
-  "75": {"text":"此{{}}一技耳。","translation":"これはただ一つの技にすぎない。","source":"自作（学習用）","kakikudashi":"此れ直だ一技のみ。","reading":"たダ","meaning":"ただ"},
-  "76": {"text":"吾{{}}知其名耳。","translation":"私はただその名前を知っているだけだ。","source":"自作（学習用）","kakikudashi":"吾ただ其の名を知るのみ。","reading":"たダ","meaning":"ただ"},
-  "77": {"text":"此事{{}}可忘乎。","translation":"この事をどうして忘れてよいだろうか。","source":"自作（学習用）","kakikudashi":"此の事、いづくんぞ忘るべけんや。","reading":"いづクンゾ","meaning":"どうして〜か"},
-  "78": {"text":"{{}}知其心。","translation":"どうしてその心が分かるだろうか。いや、分からない。","source":"自作（学習用）","kakikudashi":"いづくんぞ其の心を知らん。","reading":"いづクンゾ","meaning":"どうして〜か"},
-  "79": {"text":"{{}}有此人。","translation":"どこにこの人がいるのか。","source":"自作（学習用）","kakikudashi":"何れの処にか此の人有る。","reading":"いづレノところニか","meaning":"どこに〜か"},
-  "80": {"text":"{{}}知其故。","translation":"だれがその理由を知っているか。","source":"自作（学習用）","kakikudashi":"たれか其の故を知る。","reading":"たれカ","meaning":"誰が〜か"},
-  "81": {"text":"二人{{}}賢。","translation":"二人のうち、どちらが賢いか。","source":"自作（学習用）","kakikudashi":"二人、いづれか賢なる。","reading":"いづレカ","meaning":"どちらが〜か"},
-  "82": {"text":"其数{{}}。","translation":"その数はどれほどか。","source":"自作（学習用）","kakikudashi":"其の数、いくばくぞ。","reading":"いくばくゾ","meaning":"どれほどか"},
-  "83": {"text":"{{}}而可。","translation":"どうすればよいか。","source":"自作（学習用）","kakikudashi":"いかんしてか可ならん。","reading":"いかん","meaning":"どうすればよいか"},
-  "84": {"text":"此人{{}}。","translation":"この人はどのような人か。","source":"自作（学習用）","kakikudashi":"此の人、いかん。","reading":"いかん","meaning":"どのようか"},
-  "85": {"text":"客{{}}読書。","translation":"客はちょうど読書している。","source":"自作（学習用）","kakikudashi":"客、方に読書す。","reading":"まさニ","meaning":"ちょうど"},
-  "86": {"text":"其名{{}}聞於国中。","translation":"その名は国中に広く知られる。","source":"自作（学習用）","kakikudashi":"其の名、遍く国中に聞こゆ。","reading":"あまねク","meaning":"広く"},
-  "87": {"text":"衆人{{}}去。","translation":"人々はすべて去った。","source":"自作（学習用）","kakikudashi":"衆人、尽く去る。","reading":"ことごとク","meaning":"すべて"},
-  "88": {"text":"客{{}}言其事。","translation":"客がその事を詳しく述べる。","source":"自作（学習用）","kakikudashi":"客、つぶさに其の事を言ふ。","reading":"つぶさニ","meaning":"詳しく"},
-  "89": {"text":"少者亦{{}}学。","translation":"若い者も学ぶことができる。","source":"自作（学習用）","kakikudashi":"少き者も亦能く学ぶ。","reading":"よク","meaning":"〜できる"},
-  "90": {"text":"此吾之所{{}}知也。","translation":"これは私がもともと知っていることだ。","source":"自作（学習用）","kakikudashi":"此れ吾の固より知る所なり。","reading":"もとヨリ","meaning":"もともと"},
-  "91": {"text":"{{}}有志、事可成。","translation":"もし仮にも志があれば、事は成し遂げられる。","source":"自作（学習用）","kakikudashi":"苟くも志有らば、事成るべし。","reading":"いやしくモ〜バ","meaning":"もし〜なら"},
-  "92": {"text":"{{}}告其友。","translation":"ひそかに友人に告げる。","source":"自作（学習用）","kakikudashi":"私かに其の友に告ぐ。","reading":"ひそかニ","meaning":"ひそかに"},
-  "93": {"text":"吾{{}}国尽力。","translation":"私は国のために力を尽くす。","source":"自作（学習用）","kakikudashi":"吾、国の為に力を尽くす。","reading":"ためニ","meaning":"〜のために"},
-  "94": {"text":"{{}}見故人。","translation":"たまたま旧友を見かける。","source":"自作（学習用）","kakikudashi":"たまたま故人を見る。","reading":"たまたま","meaning":"偶然"},
-  "95": {"text":"山路{{}}険。","translation":"山道はひどく険しい。","source":"自作（学習用）","kakikudashi":"山路、甚だ険し。","reading":"はなはダ","meaning":"ひどく"},
-  "96": {"text":"吾不{{}}妄言。","translation":"私は進んででたらめを言おうとはしない。","source":"自作（学習用）","kakikudashi":"吾、肯へて妄言せず。","reading":"あへテ","meaning":"進んで〜する"},
-  "97": {"text":"{{}}有大雨、吾必往。","translation":"たとえ大雨が降っても、私は必ず行く。","source":"自作（学習用）","kakikudashi":"縦ひ大雨有るとも、吾必ず往かん。","reading":"たとヒ〜トモ","meaning":"たとえ〜としても"},
-  "98": {"text":"{{}}其人賢矣。","translation":"思うに、その人は賢いのだろう。","source":"自作（学習用）","kakikudashi":"蓋し其の人、賢ならん。","reading":"けだシ","meaning":"思うに"},
-  "99": {"text":"朋友尚不可欺、{{況父母乎}}。","translation":"友人でさえだましてはならない。まして親をだましてはならない。","source":"自作（学習用）","kakikudashi":"朋友すら尚ほ欺くべからず、況んや父母をや。","reading":"いはンヤふぼヲや","meaning":"まして父母はなおさらだ"},
-  "100": {"text":"草木{{}}生。","translation":"草木は自然に生える。","source":"自作（学習用）","kakikudashi":"草木、おのづから生ず。","reading":"おのづから","meaning":"自然に"},
-  "101": {"text":"王{{}}往。","translation":"王が自分から出向く。","source":"自作（学習用）","kakikudashi":"王、みづから往く。","reading":"みづから","meaning":"自分で"},
-  "102": {"text":"客{{}}去。","translation":"客はすでに去った。","source":"自作（学習用）","kakikudashi":"客、已に去る。","reading":"すでニ","meaning":"すでに"},
-  "103": {"text":"{{}}日暮。","translation":"やがて日が暮れた。","source":"自作（学習用）","kakikudashi":"已にして日暮る。","reading":"すでニシテ","meaning":"やがて"},
-  "104": {"text":"{{}}学問者、不可怠也。","translation":"そもそも学問というものは、怠ってはいけない。","source":"自作（学習用）","kakikudashi":"夫れ学問は、怠るべからざるなり。","reading":"そレ","meaning":"そもそも"},
-  "105": {"text":"吾{{}}遊此地。","translation":"私は以前、この地を訪れたことがある。","source":"自作（学習用）","kakikudashi":"吾、嘗て此の地に遊ぶ。","reading":"かつテ","meaning":"以前"},
-  "106": {"text":"美{{}}、此山。","translation":"美しいなあ、この山は。","source":"自作（学習用）","kakikudashi":"美しいかな、此の山。","reading":"かな","meaning":"〜だなあ","forms":{"邪":{"text":"此山美{{}}。","kakikudashi":"此の山、美しきか。","translation":"この山は美しいか。","reading":"か","meaning":"〜か"}}},
-  "107": {"text":"吾知其名{{}}。","translation":"私はその名前を知っているだけだ。","source":"自作（学習用）","kakikudashi":"吾、其の名を知るのみ。","reading":"のみ","meaning":"〜だけだ"},
-  "108": {"text":"客{{}}東来。","translation":"客が東から来る。","source":"自作（学習用）","kakikudashi":"客、東より来たる。","reading":"より","meaning":"〜から"},
-  "109": {"text":"此{{}}彼等。","translation":"これはあれと等しい。","source":"自作（学習用）","kakikudashi":"此れ彼と等し。","reading":"と","meaning":"〜と"},
-  "110": {"text":"{{与其}}多言、寧黙。","translation":"多くを語るよりは、むしろ黙っていよう。","source":"自作（学習用）","kakikudashi":"其の多言せんよりは、寧ろ黙せん。","reading":"そノ〜ンよリハ","meaning":"〜するよりは"},
-  "111": {"text":"孝{{}}、徳之本也。","translation":"親孝行は、徳の根本である。","source":"自作（学習用）","kakikudashi":"孝は、徳の本なり。","reading":"〜は","meaning":"〜は"},
-  "112": {"text":"夜有灯、{{}}読書。","translation":"夜でも明かりがあれば、書物を読むことができる。","source":"自作（学習用）","kakikudashi":"夜に灯有らば、書を読むべし。","reading":"べシ","meaning":"〜できる"},
-  "113": {"text":"此事{{}}忘。","translation":"この事は忘れてはならない。","source":"自作（学習用）","kakikudashi":"此の事は忘るべからず。","reading":"べカラず","meaning":"〜してはならない"},
-  "114": {"text":"其心{{}}石。","translation":"その心は石のようだ。","source":"自作（学習用）","kakikudashi":"其の心は石のごとし。","reading":"〜ノごとシ","meaning":"〜のようだ"},
-  "115": {"text":"此{{}}吾物。","translation":"これは私の物ではない。","source":"自作（学習用）","kakikudashi":"此れ吾が物にあらず。","reading":"〜ニあらズ","meaning":"〜ではない"},
-  "116": {"text":"此吾師{{}}。","translation":"これは私の先生である。","source":"自作（学習用）","kakikudashi":"此れ吾が師なり。","reading":"なり","meaning":"〜である"},
-  "117": {"text":"忠臣{{}}疑。","translation":"忠臣が疑われる。","source":"自作（学習用）","kakikudashi":"忠臣、疑はる。","reading":"る・らル","meaning":"〜される"},
-  "118": {"text":"王{{}}臣往。","translation":"王が家臣を行かせる。","source":"自作（学習用）","kakikudashi":"王、臣をして往かしむ。","reading":"〜ヲシテ〜しム","meaning":"〜に〜させる"},
-  "119": {"text":"富者{{}}賢。","translation":"金持ちが必ずしも賢いとは限らない。","source":"自作（学習用）","kakikudashi":"富める者、必ずしも賢ならず。","reading":"かならズシモ〜ず","meaning":"必ず〜とは限らない"},
-  "120": {"text":"吾{{}}忘此恩。","translation":"私はこの恩を決して忘れない。","source":"自作（学習用）","kakikudashi":"吾、必ず此の恩を忘れず。","reading":"かならズ〜ず","meaning":"決して〜ない"},
-  "121": {"text":"天{{}}晴。","translation":"空は常に晴れているとは限らない。","source":"自作（学習用）","kakikudashi":"天、常には晴れず。","reading":"つねニハ〜ず","meaning":"いつも〜とは限らない"},
-  "122": {"text":"此人{{}}読書。","translation":"この人は普段から読書をしない。","source":"自作（学習用）","kakikudashi":"此の人、常に読書せず。","reading":"つねニ〜ず","meaning":"いつも〜しない"},
-  "123": {"text":"吾{{}}彼。","translation":"私は彼には及ばない。","source":"自作（学習用）","kakikudashi":"吾、彼にしかず。","reading":"〜ニしかず","meaning":"〜に及ばない"},
-  "124": {"text":"国中{{}}此人。","translation":"国中にこの人に及ぶ者はいない。","source":"自作（学習用）","kakikudashi":"国中、此の人にしくはなし。","reading":"〜ニしくハなシ","meaning":"〜に及ぶものはない"},
-  "125": {"text":"{{}}勤学。","translation":"熱心に学ぶことに及ぶものはない。","source":"自作（学習用）","kakikudashi":"勤学にしくはなし。","reading":"〜ニしくハなシ","meaning":"〜に及ぶものはない"},
-  "126": {"text":"吾{{}}忘恩。","translation":"私は決して恩を忘れない。","source":"自作（学習用）","kakikudashi":"吾、敢へて恩を忘れず。","reading":"あへテ〜ず","meaning":"決して〜しない"},
-  "127": {"text":"受恩而{{}}報乎。","translation":"恩を受けて、どうして報いないことがあろうか。","source":"自作（学習用）","kakikudashi":"恩を受けて敢へて報いざらんや。","reading":"あへテ〜ざランヤ","meaning":"どうして〜しないことがあろうか"},
-  "128": {"text":"雨甚、{{}}行。","translation":"雨が激しく、行くことができない。","source":"自作（学習用）","kakikudashi":"雨甚だしく、行くを得ず。","reading":"〜ヲえず","meaning":"〜できない"},
-  "129": {"text":"聞之、{{}}悲。","translation":"それを聞き、悲しみに堪えない。","source":"自作（学習用）","kakikudashi":"之を聞き、悲しみに勝へず。","reading":"〜ニたへず","meaning":"〜に堪えられない"},
-  "130": {"text":"吾{{}}此人賢。","translation":"私はこの人を賢いと思う。","source":"自作（学習用）","kakikudashi":"吾、おもへらく、此の人は賢なりと。","reading":"おもへラク","meaning":"〜と思う"},
-  "131": {"text":"此{{}}良友也。","translation":"これは、いわゆるよい友である。","source":"自作（学習用）","kakikudashi":"此れ所謂良友なり。","reading":"いはゆる","meaning":"いわゆる"},
-  "132": {"text":"家{{}}米。","translation":"家に米がないわけではない。","source":"自作（学習用）","kakikudashi":"家に米無きにあらず。","reading":"〜なキニあらズ","meaning":"〜がないわけではない"},
-  "133": {"text":"吾{{}}知其事。","translation":"私はその事を知らないわけではない。","source":"自作（学習用）","kakikudashi":"吾、其の事を知らざるにあらず。","reading":"〜セざルニあらズ","meaning":"〜しないわけではない"},
-  "134": {"text":"此地之人{{}}善人。","translation":"この地の人は、善人でない者はいない。","source":"自作（学習用）","kakikudashi":"此の地の人、善人にあらざるはなし。","reading":"〜ニあらザルはなシ","meaning":"〜でない者はいない"},
-  "135": {"text":"衆人{{}}知之。","translation":"人々のうち、それを知らない者はいない。","source":"自作（学習用）","kakikudashi":"衆人、之を知らざるはなし。","reading":"〜セざルはなシ","meaning":"〜しない者はいない"},
-  "136": {"text":"吾{{}}知其名。","translation":"私はまだその名前を知らない。","source":"自作（学習用）","kakikudashi":"吾、未だ其の名を知らず。","reading":"いまダ〜ず","meaning":"まだ〜ない"},
-  "137": {"text":"故人{{}}来。","translation":"旧友はきっと来るだろう。","source":"自作（学習用）","kakikudashi":"故人、応に来たるべし。","reading":"まさニ〜べシ","meaning":"きっと〜だろう"},
-  "138": {"text":"学者{{}}勤。","translation":"学ぶ者は当然、勤勉であるべきだ。","source":"自作（学習用）","kakikudashi":"学者、当に勤むべし。","reading":"まさニ〜べシ","meaning":"当然〜すべきだ"},
-  "139": {"text":"日{{}}暮。","translation":"日は今まさに暮れようとしている。","source":"自作（学習用）","kakikudashi":"日、将に暮れんとす。","reading":"まさニ〜ントす","meaning":"今〜しようとしている"},
-  "140": {"text":"雨{{}}至。","translation":"雨が今にも降りそうである。","source":"自作（学習用）","kakikudashi":"雨、且に至らんとす。","reading":"まさニ〜ントす","meaning":"今にも〜しそうだ"},
-  "141": {"text":"汝{{}}早帰。","translation":"お前は早く帰るのがよい。","source":"自作（学習用）","kakikudashi":"汝、宜しく早く帰るべし。","reading":"よろシク〜べシ","meaning":"〜するのがよい"},
-  "142": {"text":"学者{{}}勤。","translation":"学ぶ者は努力する必要がある。","source":"自作（学習用）","kakikudashi":"学者、須らく勤むべし。","reading":"すべからク〜べシ","meaning":"〜する必要がある"},
-  "143": {"text":"人生{{}}朝露。","translation":"人生はちょうど朝露のようだ。","source":"自作（学習用）","kakikudashi":"人生、猶ほ朝露のごとし。","reading":"なホ〜ノごとシ","meaning":"ちょうど〜のようだ"},
-  "144": {"text":"過{{}}不及。","translation":"行き過ぎは、ちょうど足りないことと同じだ。","source":"自作（学習用）","kakikudashi":"過ぎたるは由ほ及ばざるがごとし。","reading":"なホ〜ガごとシ","meaning":"ちょうど〜のようだ"},
-  "145": {"text":"{{}}言其志。","translation":"どうしてその志を言わないのか。","source":"自作（学習用）","kakikudashi":"盍ぞ其の志を言はざる。","reading":"なんゾ〜ざル","meaning":"どうして〜しないのか"},
-  "146": {"text":"遇此難、{{}}。","translation":"この困難に遭って、どうすればよいか。","source":"自作（学習用）","kakikudashi":"此の難に遇ひ、いかんせん。","reading":"いかんセン","meaning":"どうしたらよいか"},
-  "147": {"text":"事勢{{}}。","translation":"物事の様子はこのようである。","source":"自作（学習用）","kakikudashi":"事勢、かくのごとし。","reading":"かくノごとシ","meaning":"このようだ"},
-  "148": {"text":"忠臣{{為王所疑}}。","translation":"忠臣が王に疑われる。","source":"自作（学習用）","kakikudashi":"忠臣、王の疑ふ所と為る。","reading":"おうノうたがフところトなル","meaning":"王に疑われる"},
-  "149": {"text":"{{賢者{v}不能}}、況愚者乎。","translation":"賢い人でさえできない。まして愚かな人にはできない。","source":"自作（学習用）","kakikudashi":"賢者すら{kana}能はず、況んや愚者をや。","reading":"けんじゃスラかツあたハず","meaning":"賢者でさえできない","forms":{"A尚B":{"reading":"けんじゃスラなホあたハず"}}},
-  "150": {"text":"兄尚不能、{{況弟乎}}。","translation":"兄でさえできない。まして弟にはできない。","source":"自作（学習用）","kakikudashi":"兄すら尚ほ能はず、況んや弟をや。","reading":"いはンヤおとうとヲや","meaning":"まして弟はなおさらだ"},
-  "151": {"text":"{{}}、道之難也。","translation":"ああ、道を実践するのは難しいものだ。","source":"自作（学習用）","kakikudashi":"ああ、道の難きや。","reading":"ああ","meaning":"ああ"},
-  "152": {"text":"{{}}、事已遅矣。","translation":"ああ、事はもう手遅れだ。","source":"自作（学習用）","kakikudashi":"ああ、事已に遅し。","reading":"ああ","meaning":"ああ"},
-  "153": {"text":"{{}}、政成。","translation":"一年たたないうちに政治が整った。","source":"自作（学習用）","kakikudashi":"期年ならずして、政成る。","reading":"きねんナラずシテ","meaning":"一年たたないうちに"},
-  "154": {"text":"{{}}人吾友也。","translation":"あの人は私の友である。","source":"自作（学習用）","kakikudashi":"かの人、吾が友なり。","reading":"かノ","meaning":"あの"},
-  "155": {"text":"吾聞{{}}。","translation":"私はそれを聞いた。","source":"自作（学習用）","kakikudashi":"吾、これを聞く。","reading":"これヲ","meaning":"これを"},
-  "156": {"text":"{{甲孰与乙}}賢。","translation":"甲と乙ではどちらが賢いか。","source":"自作（学習用）","kakikudashi":"甲は乙に孰れぞ賢なる。","reading":"かふハおつニいづレゾ","meaning":"甲と乙ではどちらが〜か"},
-  "157": {"text":"此人{{}}也。","translation":"この人は秦の国の人である。","source":"自作（学習用）","kakikudashi":"此の人は秦人なり。","reading":"しんひと","meaning":"秦の国の人"},
-  "158": {"text":"{{}}吾帰。","translation":"今、私は帰る。","source":"自作（学習用）","kakikudashi":"今、吾帰る。","reading":"いま","meaning":"今"},
-  "159": {"text":"{{}}吾居此。","translation":"昔、私はここに住んでいた。","source":"自作（学習用）","kakikudashi":"昔、吾此に居る。","reading":"むかし","meaning":"昔"},
-  "160": {"text":"父志在学、子志{{}}。","translation":"父は学問を志し、子も同じように志す。","source":"自作（学習用）","kakikudashi":"父の志は学に在り、子の志もかくのごとし。","reading":"かくノごとシ","meaning":"このようだ","forms":{"若其":{"text":"子之志{{若其父}}。","kakikudashi":"子の志は其の父のごとし。","translation":"子の志はその父の志に似ている。","reading":"そノちちノごとシ","meaning":"その父のようだ"}}},
-  "161": {"text":"父勤学、子亦{{}}。","translation":"父が熱心に学び、子も同じように学ぶ。","source":"自作（学習用）","kakikudashi":"父、勤学し、子も亦たかくのごとし。","reading":"かくノごとシ","meaning":"このようだ"},
-  "162": {"text":"父好学、子亦{{}}。","translation":"父が学問を好み、子も同じように好む。","source":"自作（学習用）","kakikudashi":"父、学を好み、子も亦たかくのごとし。","reading":"かくノごとシ","meaning":"このようだ","forms":{"如其":{"text":"子之志{{如其父}}。","kakikudashi":"子の志は其の父のごとし。","translation":"子の志はその父の志に似ている。","reading":"そノちちノごとシ","meaning":"その父のようだ"}}}
-}</script>
+<dialog id="editor"><form method="dialog" id="editForm"><h3 style="margin:0" id="editTitle">修正</h3><p class="notice">修正した内容はこの端末内に保存されます。</p><div id="editFields"></div><div class="flex" style="margin-top:20px"><button type="button" class="btn grow" id="editCancel">キャンセル</button><button type="submit" class="btn primary grow" value="save">保存</button></div></form></dialog>
 <script>
 (()=>{'use strict';
-const key='kanbun_simple_v1_20261027';
-const seed=JSON.parse(document.querySelector('#seed').textContent);
-function cardForms(word){const expanded=String(word).replace('A且（尚）B','A且B・A尚B');return [...new Set(expanded.replace(/（[^）]*）|\([^)]*\)|[①-⑳]/g,'').split('・').map(w=>w.trim()).filter(Boolean))]}
-let nextCardId=seed.length;
-const data=seed.flatMap((a,i)=>cardForms(a[2]).map((word,index)=>({id:index===0?i+1:++nextCardId,sourceId:i+1,partIndex:index,sourceWord:a[2],side:a[0],group:a[1],word,reading:a[3].replace('（国名）',''),meaning:a[4]})));
-let ready=false, localLoaded=false, savedLocally=false, offlineReady=false, storageWarning=false, saveRevision=0, mirrorWrites=Promise.resolve(), dbPromise=null;
-let store=load(), practiceMode=store.practiceMode==='example'?'example':'word', tab='quiz', page='すべて', category='すべて', search='', batch=[], results={}, answers={}, showAnswers=true, orderMode='ordered', editId=null, quizFilters=cleanFilters(store.settings?.quiz?.filters), recording=store.settings?.recording!==false, sandbox=null, scratchSessions={}, activeDay='';
+// Anki: generic offline flashcards. Card data lives in decks/*.json (see README.md).
+const DECK_KEY='anki_current_deck';
 const app=document.querySelector('#app');
 const esc=s=>String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const today=()=>learningDay();
+let deck=null, fields=[], fieldMap={}, data=[], key='', deckList=[];
+let ready=false, localLoaded=false, savedLocally=false, offlineReady=false, storageWarning=false, saveRevision=0, mirrorWrites=Promise.resolve(), dbPromise=null;
+let store={progress:{},edits:{},history:[],settings:{}}, practiceMode='', tab='quiz', page='すべて', category='すべて', search='', batch=[], results={}, answers={}, showAnswers=true, orderMode='ordered', editId=null, quizFilters=cleanFilters(), recording=true, sandbox=null, scratchSessions={}, activeDay='';
+
+// ---------- deck definition ----------
+function prepareDeck(raw){
+ const fail=m=>{throw Error(m)};
+ if(!raw||typeof raw!=='object'||raw.format!==1)fail('対応していない形式です（format: 1 が必要）');
+ if(typeof raw.id!=='string'||!/^[\w-]+$/.test(raw.id))fail('id は英数字・_・- で指定してください');
+ if(!Array.isArray(raw.fields)||!raw.fields.length)fail('fields がありません');
+ if(!Array.isArray(raw.cards)||!raw.cards.length)fail('cards がありません');
+ const d={choiceFallback:true,...raw};
+ d.title=raw.title||raw.id;
+ d.labels={item:'カード',counter:'枚',...(raw.labels||{})};d.labels.list=d.labels.list||d.labels.item+'一覧';
+ d.fields=raw.fields.map(f=>({type:'text',...f,aspect:f.aspect||f.key}));
+ const keys=new Set(d.fields.map(f=>f.key));
+ for(const f of d.fields){if(!/^[\w-]+$/.test(f.key)||!/^[\w-]+$/.test(f.aspect))fail('field の key は英数字で指定してください：'+f.key);if(!['text','image'].includes(f.type))fail('field の type は text か image です：'+f.key)}
+ if(keys.size!==d.fields.length)fail('field の key が重複しています');
+ if(!Array.isArray(d.modes)||!d.modes.length)d.modes=[{id:'main',label:'通常',prompt:d.fields[0].key,ask:d.fields.slice(1).filter(f=>!f.hidden).map(f=>f.key)}];
+ for(const m of d.modes){
+  if(!/^[\w-]+$/.test(m.id||''))fail('mode の id がありません');
+  if(m.prompt!=='example'&&!keys.has(m.prompt))fail('mode の prompt が fields にありません：'+m.prompt);
+  if(m.prompt==='example'&&!d.examples)fail('例文モードには examples が必要です');
+  if(!Array.isArray(m.ask)||!m.ask.length||m.ask.some(k=>!keys.has(k)))fail('mode の ask が fields にありません：'+m.id);
+  m.label=m.label||m.id;
+ }
+ const ids=new Set();
+ for(const c of d.cards){if(!Number.isInteger(c.id)||c.id<1||ids.has(c.id))fail('カードの id は重複しない正の整数にしてください：'+JSON.stringify(c).slice(0,80));ids.add(c.id)}
+ d.storageKey=raw.storageKey||'anki_'+d.id;
+ return d;
+}
+function setupDeck(){
+ fields=deck.fields;fieldMap=Object.fromEntries(fields.map(f=>[f.key,f]));key=deck.storageKey;
+ data=deck.cards.map(c=>({...c,sourceId:c.sourceId||c.id,partIndex:c.partIndex||0}));
+ document.title=deck.title+' - Anki';
+ document.querySelector('[data-tab="words"]').textContent=deck.labels.item+'一覧';
+ renderDeckSlot();
+}
+function modeIndex(){return Math.max(0,deck.modes.findIndex(m=>m.id===practiceMode))}
+function currentMode(){return deck.modes[modeIndex()]}
+function validMode(id){return deck.modes.some(m=>m.id===id)?id:deck.modes[0].id}
+function aspects(){return currentMode().ask.map(k=>fieldMap[k].aspect)}
+function aspectField(a){return fields.find(f=>f.aspect===a)}
+function aspectLabel(a){return aspectField(a)?.label||a}
+function askLabels(){return currentMode().ask.map(k=>fieldMap[k].label)}
+function headKey(){return fields[0].key}
+function sectionKey(){return deck.section?.field}
+function categoryKey(){return deck.category?.field}
+function sectionValues(){const k=sectionKey();return k?[...new Set(data.map(x=>x[k]).filter(Boolean))]:[]}
+function textOf(x){return fields.filter(f=>f.type==='text'&&!f.hidden).map(f=>x[f.key]??'').join('')}
+function joinLabels(list){return list.join('・')}
+function renderValue(f,value,extra=''){
+ if(f?.type==='image')return value?`<img class="field-image ${extra}" src="${esc(value)}" alt="${esc(f.label)}" loading="lazy">`:'';
+ return esc(value);
+}
+
+// ---------- study state ----------
 function learningStore(){return recording?store:sandbox||store}
 function clone(value){return JSON.parse(JSON.stringify(value))}
 function learningDay(time=Date.now()){return new Date(time+5*3600000).toISOString().slice(0,10)}
 function addDays(day,n){const d=new Date(day+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
 function addMonth(day){const d=new Date(day+'T12:00:00Z'),date=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+1);const last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();d.setUTCDate(Math.min(date,last));return d.toISOString().slice(0,10)}
 function initializeStudy(){store.study=store.study||{};if(store.studyVersion===1)return;for(const s of Object.values(store.progress))if(s.level==='mastered')s.level='recall';store.studyVersion=1}
-function journal(id,create=false){const root=learningStore();root.study=root.study||{};const mode=root.study[practiceMode]||(create?(root.study[practiceMode]={}):{});if(!mode[id]&&create)mode[id]={base:{r:clone(state(id,'r')),m:clone(state(id,'m'))},events:[],memory:emptyMemory()};return mode[id]}
-function emptyMemory(){return {streak:0,due:'',lastSuccessDay:'',recallDay:'',recall:{r:false,m:false}}}
+function blankRecall(){return Object.fromEntries(aspects().map(a=>[a,false]))}
+function journal(id,create=false){const root=learningStore();root.study=root.study||{};const mode=root.study[practiceMode]||(create?(root.study[practiceMode]={}):{});if(!mode[id]&&create)mode[id]={base:Object.fromEntries(aspects().map(a=>[a,clone(state(id,a))])),events:[],memory:emptyMemory()};return mode[id]}
+function emptyMemory(){return {streak:0,due:'',lastSuccessDay:'',recallDay:'',recall:blankRecall()}}
 function memory(id){return journal(id)?.memory||emptyMemory()}
-function replayStudy(id){const j=journal(id,true),states=clone(j.base),m=emptyMemory();for(const e of j.events){
+function replayStudy(id){const j=journal(id,true),states=clone(j.base),m=emptyMemory(),list=aspects();for(const e of j.events){
+ if(!states[e.aspect])states[e.aspect]=emptyState();
  applyGrade(states[e.aspect],e.correct,{method:e.method,day:e.day});
- if(m.recallDay!==e.day){m.recallDay=e.day;m.recall={r:false,m:false}}
- if(!e.correct){m.streak=0;m.due=e.day;m.lastSuccessDay='';m.recall={r:false,m:false};for(const s of Object.values(states)){s.level='choice';s.streak=0}}
- else if(e.method==='recall'){m.recall[e.aspect]=true;if(m.recall.r&&m.recall.m&&m.lastSuccessDay!==e.day&&(!m.due||e.day>=m.due)){m.streak++;m.lastSuccessDay=e.day;m.due=m.streak===1?addDays(e.day,1):m.streak===2?addDays(e.day,7):addMonth(e.day)}}
- }j.memory=m;for(const a of ['r','m']){states[a].due=m.due;setState(id,a,states[a])}return m}
+ if(m.recallDay!==e.day){m.recallDay=e.day;m.recall=blankRecall()}
+ if(!e.correct){m.streak=0;m.due=e.day;m.lastSuccessDay='';m.recall=blankRecall();for(const s of Object.values(states)){s.level='choice';s.streak=0}}
+ else if(e.method==='recall'){m.recall[e.aspect]=true;if(list.every(a=>m.recall[a])&&m.lastSuccessDay!==e.day&&(!m.due||e.day>=m.due)){m.streak++;m.lastSuccessDay=e.day;m.due=m.streak===1?addDays(e.day,1):m.streak===2?addDays(e.day,7):addMonth(e.day)}}
+ }j.memory=m;for(const a of list){if(!states[a])states[a]=emptyState();states[a].due=m.due;setState(id,a,states[a])}return m}
 function dailyFacts(id,day=today()){const events=(journal(id)?.events||[]).filter(e=>e.day===day);return {answered:!!events.length,choice:events.some(e=>e.correct&&e.method==='choice'),recall:events.some(e=>e.correct&&e.method==='recall'),wrong:events.some(e=>!e.correct),ok:memory(id).lastSuccessDay===day}}
 function cleanFilters(v={}){return {scope:['due','all','established','waiting','unestablished','review'].includes(v?.scope)?v.scope:'due',status:['all','new','wrongToday','everWrong','choice','recall'].includes(v?.status)?v.status:'all',streak:['all','0','1','2','3+'].includes(v?.streak)?v.streak:'all',excludeChoice:!!v?.excludeChoice,excludeRecall:!!v?.excludeRecall,excludeAnswered:!!v?.excludeAnswered,query:typeof v?.query==='string'?v.query:''}}
-function matchesStudyFilters(x){const f=quizFilters,m=memory(x.id),facts=dailyFacts(x.id),r=state(x.id,'r'),v=state(x.id,'m'),waiting=!!m.due&&m.due>today();
+function matchesStudyFilters(x){const f=quizFilters,m=memory(x.id),facts=dailyFacts(x.id),states=aspects().map(a=>state(x.id,a)),waiting=!!m.due&&m.due>today();
  if((f.scope==='due'&&waiting)||(f.scope==='established'&&!m.streak)||(f.scope==='waiting'&&!waiting)||(f.scope==='unestablished'&&m.streak)||(f.scope==='review'&&(!m.streak||waiting)))return false;
  if((f.excludeChoice&&facts.choice)||(f.excludeRecall&&facts.recall)||(f.excludeAnswered&&facts.answered))return false;
  if(f.streak!=='all'&&(f.streak==='3+'?m.streak<3:m.streak!==+f.streak))return false;
- if((f.status==='new'&&(r.graded||v.graded))||(f.status==='wrongToday'&&!facts.wrong)||(f.status==='everWrong'&&!(r.wrong+v.wrong))||(f.status==='choice'&&r.level!=='choice'&&v.level!=='choice')||(f.status==='recall'&&(r.level==='choice'||v.level==='choice')))return false;
- return !f.query||(x.word+x.reading+x.meaning).includes(f.query)}
-function studyFilterHtml(){const f=quizFilters,options=(list,value)=>list.map(([key,label])=>`<option value="${key}" ${key===value?'selected':''}>${label}</option>`).join('');return `<div class="study-filters"><div class="filter-main"><label>出題対象<select id="studyScope">${options([['due','通常：復習待ちを除く'],['all','すべて'],['established','定着したもののみ（1回以上）'],['waiting','復習日を待っているもの'],['review','定着済みで復習日が来たもの'],['unestablished','定着0回のもの']],f.scope)}</select></label><span class="notice">今日：${today()}（日本時間・朝4時区切り）</span></div><details id="studyFilterDetails" ${store.settings.filtersOpen?'open':''}><summary>さらに絞り込む</summary><div class="filter-fields"><label>状態<select id="studyStatus">${options([['all','すべて'],['new','未学習'],['wrongToday','今日、間違えた'],['everWrong','これまでに間違えた'],['choice','四択が残っている'],['recall','読み・意味とも思い出す形式']],f.status)}</select></label><label>定着の連続正解<select id="studyStreak">${options([['all','指定なし'],['0','0回'],['1','1回：翌日復習'],['2','2回：1週間後復習'],['3+','3回以上：1か月ごと']],f.streak)}</select></label><label>語句を検索<input type="search" id="studyQuery" value="${esc(f.query)}" placeholder="語句・読み・意味（Enterで検索）"></label></div><div class="filter-checks">${[['excludeChoice','今日、四択で正解した語義を除く'],['excludeRecall','今日、自力で正解した語義を除く'],['excludeAnswered','今日、回答した語義を除く']].map(([key,label])=>`<label><input type="checkbox" data-study-exclude="${key}" ${f[key]?'checked':''}>${label}</label>`).join('')}</div><p class="notice">除外は読み・意味のセット単位。多義語は語義ごとに管理します。条件はすべて組み合わせられます。</p><button class="btn small" type="button" id="resetStudyFilters">標準に戻す</button></details><p class="notice">回答結果はそのまま残ります。「もう一度練習」で最新の条件を適用します。</p></div>`}
+ if((f.status==='new'&&states.some(s=>s.graded))||(f.status==='wrongToday'&&!facts.wrong)||(f.status==='everWrong'&&!states.reduce((n,s)=>n+s.wrong,0))||(f.status==='choice'&&!states.some(s=>s.level==='choice'))||(f.status==='recall'&&states.some(s=>s.level==='choice')))return false;
+ return !f.query||textOf(x).includes(f.query)}
+function studyFilterHtml(){const f=quizFilters,labels=joinLabels(askLabels()),many=aspects().length>1,options=(list,value)=>list.map(([key,label])=>`<option value="${key}" ${key===value?'selected':''}>${label}</option>`).join('');return `<div class="study-filters"><div class="filter-main"><label>出題対象<select id="studyScope">${options([['due','通常：復習待ちを除く'],['all','すべて'],['established','定着したもののみ（1回以上）'],['waiting','復習日を待っているもの'],['review','定着済みで復習日が来たもの'],['unestablished','定着0回のもの']],f.scope)}</select></label><span class="notice">今日：${today()}（日本時間・朝4時区切り）</span></div><details id="studyFilterDetails" ${store.settings.filtersOpen?'open':''}><summary>さらに絞り込む</summary><div class="filter-fields"><label>状態<select id="studyStatus">${options([['all','すべて'],['new','未学習'],['wrongToday','今日、間違えた'],['everWrong','これまでに間違えた'],['choice','四択が残っている'],['recall',`${labels}${many?'とも':'を'}思い出す形式`]],f.status)}</select></label><label>定着の連続正解<select id="studyStreak">${options([['all','指定なし'],['0','0回'],['1','1回：翌日復習'],['2','2回：1週間後復習'],['3+','3回以上：1か月ごと']],f.streak)}</select></label><label>${esc(deck.labels.item)}を検索<input type="search" id="studyQuery" value="${esc(f.query)}" placeholder="${esc(joinLabels(fields.filter(x=>x.type==='text'&&!x.hidden).map(x=>x.label)))}（Enterで検索）"></label></div><div class="filter-checks">${[['excludeChoice','今日、四択で正解したものを除く'],['excludeRecall','今日、自力で正解したものを除く'],['excludeAnswered','今日、回答したものを除く']].map(([key,label])=>`<label><input type="checkbox" data-study-exclude="${key}" ${f[key]?'checked':''}>${label}</label>`).join('')}</div><p class="notice">${many?`除外は${esc(labels)}のセット単位。`:''}多義語は語義ごとに管理します。条件はすべて組み合わせられます。</p><button class="btn small" type="button" id="resetStudyFilters">標準に戻す</button></details><p class="notice">回答結果はそのまま残ります。「もう一度練習」で最新の条件を適用します。</p></div>`}
 function memoryStatus(x){const m=memory(x.id);return `<div class="memory-status"><span>定着 ${m.streak}回連続</span>${dailyFacts(x.id).ok?'<span class="grade-ok">今日OK</span>':''}${m.due?`<span>次回 ${m.due} 朝4時</span>`:''}${!recording?'<span>記録しない練習</span>':''}</div>`}
 function updateRecordToggle(){const b=document.querySelector('#recordToggle');if(!b)return;b.setAttribute('aria-checked',String(recording));b.classList.toggle('is-off',!recording);b.innerHTML=`<span class="toggle-track"><span></span></span>${recording?'記録する':'記録しない'}`}
 function switchRecording(){if(recording){save();recording=false;sandbox=clone(store);scratchSessions={}}else{recording=true;sandbox=null;scratchSessions={}}store.settings.recording=recording;answers={};results={};batch=[];if(!restoreSession())newBatch();render()}
 function refreshStudyDay(){const day=today();if(day===activeDay)return false;activeDay=day;answers={};results={};newBatch();if(ready)render();return true}
 function bindStudyFilters(){const update=(key,value)=>{quizFilters[key]=value;answers={};results={};newBatch();render()};for(const [id,key] of [['studyScope','scope'],['studyStatus','status'],['studyStreak','streak'],['studyQuery','query']])document.querySelector('#'+id)?.addEventListener('change',e=>update(key,e.target.value));app.querySelectorAll('[data-study-exclude]').forEach(el=>el.addEventListener('change',()=>update(el.dataset.studyExclude,el.checked)));document.querySelector('#resetStudyFilters')?.addEventListener('click',()=>{quizFilters=cleanFilters();answers={};results={};newBatch();render()});const query=document.querySelector('#studyQuery');query?.addEventListener('input',e=>{quizFilters.query=e.target.value});query?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();update('query',e.target.value)}});document.querySelector('#studyFilterDetails')?.addEventListener('toggle',e=>{store.settings.filtersOpen=e.target.open;save()})}
 
+// ---------- storage ----------
 function validStore(x){return x&&typeof x==='object'&&x.progress&&typeof x.progress==='object'&&!Array.isArray(x.progress)&&x.edits&&typeof x.edits==='object'&&!Array.isArray(x.edits)}
 function prepareStore(x){return {...x,history:Array.isArray(x.history)?x.history:[],settings:x.settings&&typeof x.settings==='object'?x.settings:{}}}
 function load(){try{const x=JSON.parse(localStorage.getItem(key));if(validStore(x)){localLoaded=true;return prepareStore(x)}}catch(e){storageWarning=true}return {progress:{},edits:{},history:[],settings:{}}}
+// The database name predates the rename; keep it so existing backups are found.
 function openBackupDb(){if(dbPromise)return dbPromise;dbPromise=new Promise((resolve,reject)=>{
  if(!('indexedDB' in window)){reject(Error('unavailable'));return}
  const req=indexedDB.open('kanbun_local_backup',1);
@@ -259,8 +157,8 @@ function save(){if(!ready)return;captureSession();store.savedAt=Date.now();const
  updateSaveStatus();
  mirrorWrites=mirrorWrites.catch(()=>{}).then(()=>writeBackup(JSON.parse(snapshot))).then(()=>{if(revision===saveRevision){savedLocally=true;storageWarning=false;updateSaveStatus()}}).catch(()=>{if(revision===saveRevision&&!primary){savedLocally=false;storageWarning=true;updateSaveStatus()}});
 }
-function restoreSession(){const q=recording?(store.sessions?.[practiceMode]||(practiceMode==='word'?store.session:null)):scratchSessions[practiceMode],preferences=q||store.settings.quiz||{};
- tab=['quiz','words','progress'].includes(preferences.tab)?preferences.tab:'quiz';page=['すべて','表','裏'].includes(preferences.page)?preferences.page:'すべて';category=typeof preferences.category==='string'?preferences.category:'すべて';search=typeof preferences.search==='string'?preferences.search:'';
+function restoreSession(){const q=recording?(store.sessions?.[practiceMode]||(modeIndex()===0?store.session:null)):scratchSessions[practiceMode],preferences=q||store.settings.quiz||{};
+ tab=['quiz','words','progress'].includes(preferences.tab)?preferences.tab:'quiz';page=['すべて',...sectionValues()].includes(preferences.page)?preferences.page:'すべて';category=typeof preferences.category==='string'?preferences.category:'すべて';search=typeof preferences.search==='string'?preferences.search:'';
  orderMode=preferences.orderMode==='random'?'random':'ordered';showAnswers=preferences.showAnswers!==false;quizFilters=cleanFilters(preferences.filters);
  if(!q||(q.day&&q.day!==today())||![1,2,3].includes(q.version)||!q.answers||typeof q.answers!=='object'||!q.results||typeof q.results!=='object')return false;
  answers=clone(q.answers);results={};
@@ -273,94 +171,77 @@ function restoreSession(){const q=recording?(store.sessions?.[practiceMode]||(pr
  // Migrate pending answers from the older batch screen exactly once.
  if(q.version===1)for(const [k,value] of Object.entries(answers)){
   const parts=questionKey(k);if(!parts||results[k])continue;
-  const [id,a]=parts,x=item(id),before=state(id,a);
-  if(before.level==='choice'&&typeof value==='string'&&value.trim())recordGrade(k,isCorrect(value,x[a==='r'?'reading':'meaning']));
+  const [id,a]=parts,x=item(id),before=state(id,a),f=aspectField(a);
+  if(before.level==='choice'&&typeof value==='string'&&value.trim())recordGrade(k,isCorrect(f,value,x[f.key]));
   else if(before.level!=='choice'&&value?.revealed&&typeof value.correct==='boolean')recordGrade(k,value.correct);
  }
  return valid;
 }
-function questionKey(k){const m=/^(\d+):(r|m)$/.exec(k);return m&&data.some(x=>x.id===+m[1])?[+m[1],m[2]]:null}
-async function start(){app.innerHTML='<div class="panel sub">学習データを読み込み中…</div>';
- try{const backup=await readBackup();if(validStore(backup)&&(!localLoaded||(backup.savedAt||0)>(store.savedAt||0))){store=prepareStore(backup);localLoaded=true}}catch(e){}
- practiceMode=store.practiceMode==='example'?'example':'word';migrateCards();initializeStudy();recording=store.settings.recording!==false;if(!recording)sandbox=clone(store);activeDay=today();const scroll=Number(store.session?.scrollY)||0,restored=restoreSession();if(!restored)newBatch();ready=true;render();
- if(restored)requestAnimationFrame(()=>window.scrollTo({top:scroll,behavior:'instant'}));
- if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{});
-}
-function migrateCards(){if(store.cardVersion===2)return;
+function questionKey(k){const m=/^(\d+):([\w-]+)$/.exec(k);return m&&aspects().includes(m[2])&&data.some(x=>x.id===+m[1])?[+m[1],m[2]]:null}
+function splitForms(word){return [...new Set(String(word).replace(/（[^）]*）|\([^)]*\)|[①-⑳]/g,'').split('・').map(w=>w.trim()).filter(Boolean))]}
+// Older saves stored split cards (e.g. 爾・而・女) under their first card only.
+function migrateCards(){if(store.cardVersion===2)return;const list=deck.modes[0].ask.map(k=>fieldMap[k].aspect),head=headKey();
  for(const x of data){if(x.id===x.sourceId)continue;
-  for(const a of ['r','m']){const old=store.progress[x.sourceId+':'+a];if(old&&!store.progress[x.id+':'+a])store.progress[x.id+':'+a]={...old}}
-  const edit=store.edits[x.sourceId];if(edit&&!store.edits[x.id]){const forms=edit.word?cardForms(edit.word):[];store.edits[x.id]={...edit,word:forms[x.partIndex]||x.word}}
+  for(const a of list){const old=store.progress[x.sourceId+':'+a];if(old&&!store.progress[x.id+':'+a])store.progress[x.id+':'+a]={...old}}
+  const edit=store.edits[x.sourceId];if(edit&&!store.edits[x.id]){const forms=edit[head]?splitForms(edit[head]):[];store.edits[x.id]={...edit,[head]:forms[x.partIndex]||x[head]}}
  }
  store.cardVersion=2;
 }
-function item(id){const x=data.find(x=>x.id===+id);if(!x)return null;const edited=Object.assign({},x,store.edits[id]||{});edited.word=cardForms(edited.word)[0]||x.word;if(practiceMode==='example'){const contextual=exampleAnswers(edited),custom=store.edits[id];edited.reading=custom?.reading||contextual.reading;edited.meaning=custom?.meaning||contextual.meaning}return edited}
+
+// ---------- cards ----------
+function item(id){const x=data.find(x=>x.id===+id);if(!x)return null;const custom=store.edits[id]||{},edited=Object.assign({},x,custom);
+ if(currentMode().prompt==='example'){const contextual=exampleFor(edited)||{};for(const k of currentMode().ask)edited[k]=custom[k]||contextual[k]||x[k]}
+ return edited}
 function items(){return data.map(x=>item(x.id))}
 function emptyState(){return{level:'choice',mc:0,free:0,wrong:0,streak:0,last:'',due:'',firstFreeDay:'',laterHit:false,graded:0}}
-function progressKey(id,aspect){return (practiceMode==='example'?'example:':'')+id+':'+aspect}
-function state(id,aspect){let k=progressKey(id,aspect);return learningStore().progress[k]||emptyState()}
+function progressKey(id,aspect){return (modeIndex()>0?practiceMode+':':'')+id+':'+aspect}
+function belongsToMode(k){return modeIndex()>0?k.startsWith(practiceMode+':'):/^\d+:/.test(k)}
+function state(id,aspect){return learningStore().progress[progressKey(id,aspect)]||emptyState()}
 function setState(id,aspect,s){learningStore().progress[progressKey(id,aspect)]=s}
 function badge(s){return s.level==='mastered'?'定着':s.level==='recall'?'自己採点':'四択'}
-function displayDate(d){return d||'未設定'}
-function daysFrom(n){return addDays(today(),n)}
-function levelCount(){let all=items().length*2;let master=0,free=0,attempt=0;for(let x of items())for(let a of ['r','m']){let s=state(x.id,a);if(memory(x.id).streak>0)master++;if(s.level==='recall')free++;if(s.graded)attempt++}return{all,master,free,attempt}}
-function stats(){let x=levelCount();return `<div class="stats"><div class="stat"><strong>${groupEntries(items()).length}</strong><span>収録語句</span></div><div class="stat"><strong>${x.attempt}<small style="font-size:12px"> / ${x.all}</small></strong><span>学習した項目</span></div><div class="stat"><strong>${x.master}</strong><span>定着中の項目</span></div></div>`}
+function levelCount(){const list=aspects(),all=items();let master=0,free=0,attempt=0;for(let x of all){const established=memory(x.id).streak>0;for(let a of list){let s=state(x.id,a);if(established)master++;if(s.level==='recall')free++;if(s.graded)attempt++}}return{all:all.length*list.length,master,free,attempt}}
+function stats(){let x=levelCount();return `<div class="stats"><div class="stat"><strong>${groupEntries(items()).length}</strong><span>収録${esc(deck.labels.item)}</span></div><div class="stat"><strong>${x.attempt}<small style="font-size:12px"> / ${x.all}</small></strong><span>学習した項目</span></div><div class="stat"><strong>${x.master}</strong><span>定着中の項目</span></div></div>`}
 function randSort(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function filtered(){return items().filter(x=>(page==='すべて'||x.side===page)&&(category==='すべて'||x.group===category))}
-function groupEntries(entries){const groups=new Map();for(const x of entries){const k=JSON.stringify([x.word,x.group]);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)}return [...groups.values()].map(group=>group.sort((a,b)=>a.sourceId-b.sourceId||a.partIndex-b.partIndex))}
+function filtered(){const sk=sectionKey(),ck=categoryKey();return items().filter(x=>(!sk||page==='すべて'||x[sk]===page)&&(!ck||category==='すべて'||x[ck]===category))}
+function groupEntries(entries){const groups=new Map(),head=headKey(),ck=categoryKey();for(const x of entries){const k=JSON.stringify([x[head],ck?x[ck]:'']);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)}return [...groups.values()].map(group=>group.sort((a,b)=>a.sourceId-b.sourceId||a.partIndex-b.partIndex))}
 function newBatch(){const groups=groupEntries(filtered().filter(matchesStudyFilters));if(orderMode==='random')randSort(groups);batch=groups.flat().map(x=>x.id)}
-function restartPractice(){for(const id of batch)for(const a of ['r','m']){const k=id+':'+a;delete answers[k];delete answers['_opts_'+k];delete results[k]}newBatch();render();window.scrollTo({top:0,behavior:'instant'})}
+function restartPractice(){for(const id of batch)for(const a of aspects()){const k=id+':'+a;delete answers[k];delete answers['_opts_'+k];delete results[k]}newBatch();render();window.scrollTo({top:0,behavior:'instant'})}
 function changeScope(){newBatch();render();window.scrollTo({top:0,behavior:'instant'})}
+
+// ---------- answers and choices ----------
 function normalize(s){return String(s||'').normalize('NFKC').toLowerCase().replace(/[ー〜～（）()・。、，,\s「」『』\[\]【】①②③④⑤！!？?]/g,'').replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96))}
 function variants(value){let s=value.replace(/（[^）]*）/g,'').trim();let b=[value,s,...[...value.matchAll(/（([^）]*)）/g)].map(m=>m[1])];for(let v of [value,s])for(let split of ['・','／','/','、',';'])if(v.includes(split))b.push(...v.split(split));return [...new Set(b.map(normalize).filter(Boolean))]}
-function isCorrect(ans,solution){const a=normalize(ans);if(!a)return false;return variants(solution).some(v=>a===v)}
-const readingNotes={'不必':'「必ずしも〜ない」＝部分否定','必不':'「必ず〜ない」＝全部否定','不常':'「常に〜とは限らない」','常不':'「いつも〜ない」','不敢':'「決して〜ない」','敢不':'「どうして〜しないのか」＝反語','不如・不若':'「〜に及ばない」という比較','無如・無若':'「〜に及ぶものはない」','不可':'「〜できない」と「〜してはいけない」','未':'「未だ」と「ず」をセットで読む','当':'「まさに〜べし」','将':'「まさに〜んとす」','尽':'尽くす＝残らずすべて','遍':'全体にあまねく広がる','寡':'多い「衆」の反対で、少ない','寡人':'諸侯が自分をへりくだって呼ぶ語','妾':'女性が自分を呼ぶ語','臣':'家臣の一人称','苟①':'仮定を表すときの「いやしくも」','苟②':'譲歩を表すときの「いやしくも」','無不':'二重の否定で「すべて〜する」','無非':'二重の否定で「すべて〜だ」','莫・勿・無（禁止）':'「なかれ」なら禁止','不勝':'「〜に堪えず」＝抑えられない・しきれない'};
-function overlapAnswers(a,b){const av=variants(a),bv=variants(b);return av.some(v=>bv.includes(v))}
-// Use seed row IDs so the exclusions apply to every spelling and contextual variant.
-const distractorBlacklist={
- r:[
-  [77,78], // いづくんぞ・なんぞ
-  [80,81], // 孰 can ask either who or which
-  [83,84], // いかん
-  [68,74,75,76], // ただ・ひとり
- ],
- m:[
-  [4,5], [7,12,13], [9,10], // 世界・世間、私、先生
-  [17,18], [21,26], [22,25], // する・作る、行く・帰る、答える
-  [47,55,58,59,60], // concession
-  [48,49,50,51,52,56,61], [48,50,53,56,57,61], // result or succession
-  [62,63], [63,71], [65,66,103], [67,91], [69,70], [72,94], [68,74,75,76], [90,102,105],
-  [77,78,83], [78,79], [80,81], [83,84], // competing interpretations of the question
-  [119,121], [120,122,126], [123,124,125], [128,129],
-  [132,133], [134,135], [137,138,141,142], [139,140], [143,144],
-  [147,160,161,162], [151,152],
- ],
-};
+function answerVariants(f,value){return f?.type==='image'?[String(value)]:variants(String(value??''))}
+function isCorrect(f,ans,solution){if(f?.type==='image')return ans===solution;const a=normalize(ans);if(!a)return false;return variants(solution).some(v=>a===v)}
+function overlapAnswers(f,a,b){const av=answerVariants(f,a),bv=answerVariants(f,b);return av.some(v=>bv.includes(v))}
+function exclusionGroups(f){return [...(deck.choiceExclusions?.[f.key]||[]),...(currentMode().choiceExclusions?.[f.key]||[])]}
+// Exclusions use card source IDs so they apply to every spelling and contextual variant.
 function relatedDistractor(a,b,aspect){
- if(a.sourceId===b.sourceId||a.word===b.word)return true;
- if(aspect==='m'&&practiceMode==='word'&&[108,110].includes(a.sourceId)&&[108,110].includes(b.sourceId))return true;
- return distractorBlacklist[aspect].some(group=>group.includes(a.sourceId)&&group.includes(b.sourceId));
+ const head=headKey();if(a.sourceId===b.sourceId||a[head]===b[head])return true;
+ return exclusionGroups(aspectField(aspect)).some(group=>group.includes(a.sourceId)&&group.includes(b.sourceId));
 }
 function choicePool(x,aspect){
- const field=aspect==='r'?'reading':'meaning',all=items();
- const blocked=all.filter(o=>relatedDistractor(x,o,aspect));
- const blockedAnswers=new Set(blocked.flatMap(o=>variants(o[field])));
- for(const variant of variants(x[field]))blockedAnswers.add(variant);
- return [...new Set(all.filter(o=>o.group===x.group&&!relatedDistractor(x,o,aspect)).map(o=>o[field]))]
-  .filter(value=>value&&!variants(value).some(variant=>blockedAnswers.has(variant)));
+ const f=aspectField(aspect),field=f.key,all=items(),group=deck.choiceGroup;
+ const blockedAnswers=new Set(all.filter(o=>relatedDistractor(x,o,aspect)).flatMap(o=>answerVariants(f,o[field])));
+ for(const variant of answerVariants(f,x[field]))blockedAnswers.add(variant);
+ const pick=list=>[...new Set(list.filter(o=>!relatedDistractor(x,o,aspect)).map(o=>o[field]))].filter(value=>value&&!answerVariants(f,value).some(variant=>blockedAnswers.has(variant)));
+ const pool=pick(group?all.filter(o=>o[group]===x[group]):all);pool.primary=pool.length;
+ if(group&&deck.choiceFallback&&pool.length<3)for(const value of pick(all))if(!pool.includes(value))pool.push(value);
+ return pool;
 }
 function choices(x,aspect,pool=choicePool(x,aspect)){
- const solution=x[aspect==='r'?'reading':'meaning'],vals=[solution];
- for(const value of randSort([...pool])){
-  if(!vals.some(selected=>overlapAnswers(selected,value)))vals.push(value);
+ const f=aspectField(aspect),solution=x[f.key],vals=[solution];
+ for(const value of [...randSort(pool.slice(0,pool.primary)),...randSort(pool.slice(pool.primary))]){
+  if(!vals.some(selected=>overlapAnswers(f,selected,value)))vals.push(value);
   if(vals.length===4)break;
  }
  return randSort(vals).map(val=>({val,label:val}));
 }
 function senseNumber(x){const siblings=groupEntries(batch.map(item)).find(group=>group.some(o=>o.id===x.id));return siblings&&siblings.length>1?' '+(siblings.findIndex(o=>o.id===x.id)+1):''}
-function question(x,aspect){const k=x.id+':'+aspect,before=state(x.id,aspect),mode=before.level==='choice'?'choice':'recall',ans=answers[k],label=(aspect==='r'?'読み':'意味')+senseNumber(x);
+function question(x,aspect){const k=x.id+':'+aspect,f=aspectField(aspect),before=state(x.id,aspect),mode=before.level==='choice'?'choice':'recall',ans=answers[k],label=esc(f.label)+senseNumber(x);
  let html=`<div class="question" data-question="${k}"><div class="qtitle">${label}<span class="level">${badge(before)}</span></div>`;
  if(mode==='choice'){
-  const solution=x[aspect==='r'?'reading':'meaning'],pool=choicePool(x,aspect);
+  const solution=x[f.key],pool=choicePool(x,aspect);
   let opts=answers['_opts_'+k];
   const valid=Array.isArray(opts)&&opts.length>=2&&opts.length<=4
    &&opts.filter(o=>o?.val===solution).length===1
@@ -368,21 +249,20 @@ function question(x,aspect){const k=x.id+':'+aspect,before=state(x.id,aspect),mo
    &&new Set(opts.map(o=>o.val)).size===opts.length;
   if(!valid)opts=answers['_opts_'+k]=choices(x,aspect,pool);
   if(opts.length!==4)html=html.replace('>四択</span>',`>${opts.length}択</span>`);
-  html+=`<div class="choices">${opts.map((o,i)=>`<label class="choice"><input type="radio" name="${k}" value="${esc(o.val)}" aria-label="${esc(o.label)}"><span><span style="color:var(--muted);font-size:12px">${'ABCD'[i]}. </span>${esc(o.label)}</span></label>`).join('')}</div>`;
+  html+=`<div class="choices${f.type==='image'?' image-choices':''}">${opts.map((o,i)=>`<label class="choice"><input type="radio" name="${k}" value="${esc(o.val)}" aria-label="${esc(f.type==='image'?f.label+' '+'ABCD'[i]:o.label)}"><span><span style="color:var(--muted);font-size:12px">${'ABCD'[i]}. </span>${renderValue(f,o.label)}</span></label>`).join('')}</div>`;
  }else if(!ans?.revealed){
   html+=`<div class="recall-actions"><button class="btn primary" type="button" data-recall="${k}" data-action="remember">思い出した</button><button class="btn" type="button" data-recall="${k}" data-action="forget">思い出せない</button></div>`;
  }else{
-  html+=`<div class="answer ok"><strong>答え</strong><div class="correct-answer">${esc(x[aspect==='r'?'reading':'meaning'])}</div></div><p class="sub">思い出した答えは合っていましたか？</p><div class="recall-actions"><button class="btn" type="button" data-self-grade="${k}" data-correct="true">○ 正解</button><button class="btn danger" type="button" data-self-grade="${k}" data-correct="false">× 不正解</button></div>`;
+  html+=`<div class="answer ok"><strong>答え</strong><div class="correct-answer">${renderValue(f,x[f.key])}</div></div><p class="sub">思い出した答えは合っていましたか？</p><div class="recall-actions"><button class="btn" type="button" data-self-grade="${k}" data-correct="true">○ 正解</button><button class="btn danger" type="button" data-self-grade="${k}" data-correct="false">× 不正解</button></div>`;
  }
  return html+'</div>';
 }
 function answerSummary(x,aspect){const k=x.id+':'+aspect,r=results[k];if(!r)return '';
- const correct=x[aspect==='r'?'reading':'meaning'],selected=answers[k],wrong=r.before.level==='choice'&&typeof selected==='string'&&!isCorrect(selected,correct);
- return `<div class="question question-result" data-question="${k}"><div class="result-head"><strong>${aspect==='r'?'読み':'意味'}${senseNumber(x)} <span class="${r.correct?'grade-ok':'grade-ng'}">${r.correct?'○':'×'}</span></strong><button class="btn small" type="button" data-override="${k}">${r.correct?'不正解に訂正':'正解扱いに訂正'}</button></div><div class="result-answer is-correct"><span>正解</span>${esc(correct)}</div>${wrong?`<div class="result-answer is-wrong"><span>選んだ答え</span>${esc(selected)}</div>`:''}</div>`;
+ const f=aspectField(aspect),correct=x[f.key],selected=answers[k],wrong=r.before.level==='choice'&&typeof selected==='string'&&!isCorrect(f,selected,correct);
+ return `<div class="question question-result" data-question="${k}"><div class="result-head"><strong>${esc(f.label)}${senseNumber(x)} <span class="${r.correct?'grade-ok':'grade-ng'}">${r.correct?'○':'×'}</span></strong><button class="btn small" type="button" data-override="${k}">${r.correct?'不正解に訂正':'正解扱いに訂正'}</button></div><div class="result-answer is-correct"><span>正解</span>${renderValue(f,correct)}</div>${wrong?`<div class="result-answer is-wrong"><span>選んだ答え</span>${renderValue(f,selected)}</div>`:''}</div>`;
 }
-function exerciseHtml(x){const reading=!!results[x.id+':r'],meaning=!!results[x.id+':m'];
- return `${reading?answerSummary(x,'r'):question(x,'r')}${reading?(meaning?answerSummary(x,'m'):question(x,'m')):''}${memoryStatus(x)}`;
-}
+// Ask each aspect in order; the next one appears after the previous is answered.
+function exerciseHtml(x){let html='';for(const a of aspects()){if(results[x.id+':'+a]){html+=answerSummary(x,a);continue}html+=question(x,a);break}return html+memoryStatus(x)}
 function recordGrade(k,correct){const parts=questionKey(k);if(!parts||results[k]||typeof correct!=='boolean')return false;
  const [id,a]=parts,before=clone(state(id,a)),day=today(),method=before.level==='choice'?'choice':'recall',j=journal(id,true),root=learningStore();
  const event={id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),aspect:a,method,day,at:Date.now(),correct};j.events.push(event);replayStudy(id);
@@ -390,7 +270,7 @@ function recordGrade(k,correct){const parts=questionKey(k);if(!parts||results[k]
 }
 function answerChoice(k,value){if(refreshStudyDay())return;const parts=questionKey(k);if(!parts||results[k]||!batch.includes(parts[0])||state(...parts).level!=='choice')return;
  const opts=answers['_opts_'+k];if(!opts?.some(o=>o.val===value))return;
- answers[k]=value;const x=item(parts[0]);recordGrade(k,isCorrect(value,x[parts[1]==='r'?'reading':'meaning']));refreshQuestion(k);
+ answers[k]=value;const x=item(parts[0]),f=aspectField(parts[1]);recordGrade(k,isCorrect(f,value,x[f.key]));refreshQuestion(k);
 }
 function revealRecall(k,recalled){if(refreshStudyDay())return;const parts=questionKey(k);if(!parts||results[k]||answers[k]?.revealed||state(...parts).level==='choice')return;
  answers[k]={revealed:true,recalled,correct:recalled?null:false};if(!recalled)recordGrade(k,false);refreshQuestion(k);
@@ -400,7 +280,7 @@ function refreshQuestion(k){const parts=questionKey(k);
  if(parts){const x=item(parts[0]),exercise=document.querySelector('#exercise-'+x.id),top=exercise?.getBoundingClientRect().top,active=exercise?.querySelector('.question:not(.question-result)');
   if(exercise){exercise.innerHTML=exerciseHtml(x);exercise.querySelectorAll('[data-question]').forEach(bindQuestion)}
   const translation=document.querySelector('#translation-'+x.id);if(translation)translation.innerHTML=exampleTranslation(x);
-  // Keep the question slot in place when the written reading expands above it.
+  // Keep the question slot in place when the answer above it expands.
   if(active&&exercise&&top>=64&&top<window.innerHeight){const shift=exercise.getBoundingClientRect().top-top;if(Math.abs(shift)>1)window.scrollBy({top:shift,behavior:'instant'})}
  }
  const statsEl=document.querySelector('#quizStats');if(statsEl)statsEl.innerHTML=stats();const tally=document.querySelector('#quizTally');if(tally)tally.innerHTML=quizTally();save();
@@ -411,46 +291,49 @@ function bindQuestion(el){if(!el)return;
  el.querySelectorAll('[data-self-grade]').forEach(button=>button.addEventListener('click',()=>rateRecall(button.dataset.selfGrade,button.dataset.correct==='true')));
  el.querySelectorAll('[data-override]').forEach(button=>button.addEventListener('click',()=>override(button.dataset.override)));
 }
-const exampleSeed=JSON.parse(document.querySelector('#exampleSeed').textContent);
-function exampleFor(x){
- const example=exampleSeed[x.sourceId];
- const variant=example.forms?.[x.word];
- return variant?{...example,...variant}:example;
-}
-function exampleAnswers(x){
- const example=exampleFor(x);
- return {reading:example.reading,meaning:example.meaning};
-}
+
+// ---------- examples ----------
+function exampleFor(x){const example=deck.examples?.[x.sourceId];if(!example)return null;const variant=example.forms?.[x[headKey()]];return variant?{...example,...variant}:example}
 function exampleHtml(x){
- const e=exampleFor(x),target=x.word.includes('且')?'且':'尚';
- const text=e.text.replaceAll('{v}',target).replaceAll('{{}}','{{'+x.word+'}}');
- const parts=text.split(/(\{\{.*?\}\})/g);
- return `<div class="example-sentence">${parts.map(part=>part.startsWith('{{')?'<u>'+esc(part.slice(2,-2))+'</u>':esc(part)).join('')}</div><div id="translation-${x.id}">${exampleTranslation(x)}</div><div class="example-source">${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.source)}</a>`:esc(e.source)}</div>`;
+ const e=exampleFor(x);if(!e)return '';
+ const parts=e.text.replaceAll('{{}}','{{'+x[headKey()]+'}}').split(/(\{\{.*?\}\})/g);
+ return `<div class="example-sentence">${parts.map(part=>part.startsWith('{{')?'<u>'+esc(part.slice(2,-2))+'</u>':esc(part)).join('')}</div><div id="translation-${x.id}">${exampleTranslation(x)}</div>${e.source?`<div class="example-source">${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.source)}</a>`:esc(e.source)}</div>`:''}`;
 }
 function exampleTranslation(x){
- if(practiceMode!=='example'&&!answers['_example_'+x.id])return '';
- const reading=!!results[x.id+':r']||!!answers[x.id+':r']?.revealed,meaning=!!results[x.id+':m']||!!answers[x.id+':m']?.revealed;
- if(!reading&&!meaning)return '';
- const e=exampleFor(x),writing=e.kakikudashi.replaceAll('{kana}',x.word.includes('且')?'かつ':'なほ');
- return `<div class="example-translation">${reading?`<div>書き下し：${esc(writing)}</div>`:''}${meaning?`<div${reading?' style="margin-top:5px"':''}>全文訳：${esc(e.translation)}</div>`:''}</div>`;
+ if(currentMode().prompt!=='example'&&!answers['_example_'+x.id])return '';
+ const e=exampleFor(x);if(!e)return '';
+ const shown=(deck.exampleReveal||[]).filter(r=>{const a=fieldMap[r.after]?.aspect;return a&&(!!results[x.id+':'+a]||!!answers[x.id+':'+a]?.revealed)&&e[r.key]});
+ if(!shown.length)return '';
+ return `<div class="example-translation">${shown.map((r,i)=>`<div${i?' style="margin-top:5px"':''}>${esc(r.label)}：${esc(e[r.key])}</div>`).join('')}</div>`;
 }
-function examplePanel(x){const shown=practiceMode==='example'||answers['_example_'+x.id];return `${practiceMode==='word'?`<button class="btn small example-toggle" data-example="${x.id}" type="button">${shown?'例文を隠す':'例文を表示'}</button>`:''}${shown?exampleHtml(x):''}`}
-function switchMode(mode){if(mode===practiceMode)return;save();practiceMode=mode;answers={};results={};batch=[];if(!restoreSession())newBatch();render();window.scrollTo({top:0,behavior:'instant'})}
-function categoryOptions(){let groups=['すべて',...new Set(items().filter(x=>page==='すべて'||x.side===page).map(x=>x.group))];return groups.map(g=>`<option value="${esc(g)}" ${category===g?'selected':''}>${esc(g==='すべて'?'全分野':g)}</option>`).join('')}
-function quizTally(){let answered=0,correct=0;for(const id of batch)for(const a of ['r','m']){const r=results[id+':'+a];if(r){answered++;if(r.correct)correct++}}return `<strong>${groupEntries(batch.map(item)).length}語・${batch.length*2}項目</strong><span class="sub">回答済み ${answered}　正解 ${correct}　未回答 ${batch.length*2-answered}</span>`}
-function quiz(){let summary=`<div id="quizStats">${stats()}</div>`,opts=`<div class="panel"><div class="flex"><select id="practiceMode" aria-label="学習モード"><option value="word" ${practiceMode==='word'?'selected':''}>語句モード</option><option value="example" ${practiceMode==='example'?'selected':''}>例文モード</option></select><span class="sub">出題範囲</span><select id="pageSelect" aria-label="出題範囲"><option value="すべて" ${page==='すべて'?'selected':''}>両面</option><option value="表" ${page==='表'?'selected':''}>表</option><option value="裏" ${page==='裏'?'selected':''}>裏</option></select><select id="categorySelect" aria-label="分野">${categoryOptions()}</select><select id="orderSelect" aria-label="出題順"><option value="ordered" ${orderMode==='ordered'?'selected':''}>順番どおり</option><option value="random" ${orderMode==='random'?'selected':''}>ランダム順</option></select>${orderMode==='random'?'<button class="btn small" type="button" id="reshuffle">並べ替える</button>':''}<button class="btn small" type="button" id="restart">もう一度練習</button></div><p class="sub" style="margin:10px 0 0">語句・例文の習熟度は別管理です。読み→意味の順に出題し、回答時に自動保存します。自己採点は答えを確認して○×を選びます。未回答は履歴に影響しません。</p>${studyFilterHtml()}</div>`;
-if(!batch.length)return summary+opts+'<div class="panel empty">今の条件に合う問題はありません。出題対象を「すべて」にするか、絞り込みを変更できます。</div>';
-const groups=groupEntries(batch.map(item));
-const cards=groups.map((entries,i)=>{const x=entries[0],sides=[...new Set(entries.map(o=>o.side))].join('・');return `<section class="panel" data-word="${esc(x.word)}" data-group="${esc(x.group)}"><div class="countmark">${i+1} / ${groups.length}　<span class="inline-mark">${esc(sides)}・${esc(x.group)}</span></div><div class="${practiceMode==='example'?'example-heading':'quizword'}">${practiceMode==='example'?'下線部の読み・意味':esc(x.word)}</div>${entries.map(o=>`<div class="sense" data-id="${o.id}">${examplePanel(o)}<div class="exercise" id="exercise-${o.id}" aria-live="polite">${exerciseHtml(o)}</div></div>`).join('')}</section>`}).join('');
-return summary+opts+`<div class="quizhead" id="quizTally">${quizTally()}</div>`+cards;
+function examplePanel(x){if(!exampleFor(x))return '';const exampleMode=currentMode().prompt==='example',shown=exampleMode||answers['_example_'+x.id];return `${!exampleMode?`<button class="btn small example-toggle" data-example="${x.id}" type="button">${shown?'例文を隠す':'例文を表示'}</button>`:''}${shown?exampleHtml(x):''}`}
+
+// ---------- screens ----------
+function switchMode(mode){if(mode===practiceMode)return;save();practiceMode=validMode(mode);answers={};results={};batch=[];if(!restoreSession())newBatch();render();window.scrollTo({top:0,behavior:'instant'})}
+function sectionOptions(id){const s=deck.section;if(!s)return '';return `<select id="${id}" aria-label="${esc(s.label||'範囲')}"><option value="すべて" ${page==='すべて'?'selected':''}>${esc(s.all||'すべて')}</option>${sectionValues().map(v=>`<option value="${esc(v)}" ${page===v?'selected':''}>${esc(v)}</option>`).join('')}</select>`}
+function categoryOptions(){const ck=categoryKey(),sk=sectionKey();let groups=['すべて',...new Set(items().filter(x=>!sk||page==='すべて'||x[sk]===page).map(x=>x[ck]).filter(Boolean))];return groups.map(g=>`<option value="${esc(g)}" ${category===g?'selected':''}>${esc(g==='すべて'?(deck.category.all||'すべて'):g)}</option>`).join('')}
+function categorySelect(id){return categoryKey()?`<select id="${id}" aria-label="${esc(deck.category.label||'分類')}">${categoryOptions()}</select>`:''}
+function quizTally(){const list=aspects();let answered=0,correct=0;for(const id of batch)for(const a of list){const r=results[id+':'+a];if(r){answered++;if(r.correct)correct++}}return `<strong>${groupEntries(batch.map(item)).length}${esc(deck.labels.counter)}・${batch.length*list.length}項目</strong><span class="sub">回答済み ${answered}　正解 ${correct}　未回答 ${batch.length*list.length-answered}</span>`}
+function promptHtml(x,mode){if(mode.prompt==='example')return `<div class="example-heading">${esc(mode.heading||'下線部の'+joinLabels(askLabels()))}</div>`;const f=fieldMap[mode.prompt];return f.type==='image'?`<div class="quizword">${renderValue(f,x[f.key],'prompt-image')}</div>`:`<div class="quizword">${esc(x[f.key])}</div>`}
+function quiz(){const mode=currentMode(),modes=deck.modes,labels=askLabels();
+ let summary=`<div id="quizStats">${stats()}</div>`,opts=`<div class="panel"><div class="flex">${modes.length>1?`<select id="practiceMode" aria-label="学習モード">${modes.map(m=>`<option value="${esc(m.id)}" ${m.id===practiceMode?'selected':''}>${esc(m.label)}</option>`).join('')}</select>`:''}${deck.section?`<span class="sub">${esc(deck.section.label||'出題範囲')}</span>`:''}${sectionOptions('pageSelect')}${categorySelect('categorySelect')}<select id="orderSelect" aria-label="出題順"><option value="ordered" ${orderMode==='ordered'?'selected':''}>順番どおり</option><option value="random" ${orderMode==='random'?'selected':''}>ランダム順</option></select>${orderMode==='random'?'<button class="btn small" type="button" id="reshuffle">並べ替える</button>':''}<button class="btn small" type="button" id="restart">もう一度練習</button></div><p class="sub" style="margin:10px 0 0">${modes.length>1?esc(joinLabels(modes.map(m=>m.label)))+'の習熟度は別管理です。':''}${labels.length>1?esc(labels.join('→'))+'の順に出題し、':''}回答時に自動保存します。自己採点は答えを確認して○×を選びます。未回答は履歴に影響しません。</p>${studyFilterHtml()}</div>`;
+ if(!batch.length)return summary+opts+'<div class="panel empty">今の条件に合う問題はありません。出題対象を「すべて」にするか、絞り込みを変更できます。</div>';
+ const groups=groupEntries(batch.map(item)),sk=sectionKey(),ck=categoryKey();
+ const cards=groups.map((entries,i)=>{const x=entries[0],marks=[sk?[...new Set(entries.map(o=>o[sk]).filter(Boolean))].join('・'):'',ck?x[ck]:''].filter(Boolean).join('・');return `<section class="panel"><div class="countmark">${i+1} / ${groups.length}　<span class="inline-mark">${esc(marks)}</span></div>${promptHtml(x,mode)}${entries.map(o=>`<div class="sense" data-id="${o.id}">${examplePanel(o)}<div class="exercise" id="exercise-${o.id}" aria-live="polite">${exerciseHtml(o)}</div></div>`).join('')}</section>`}).join('');
+ return summary+opts+`<div class="quizhead" id="quizTally">${quizTally()}</div>`+cards;
 }
-function overviewText(x){const r=state(x.id,'r'),m=state(x.id,'m'),v=memory(x.id);return `読み：${badge(r)} ／ 意味：${badge(m)} ／ 定着 ${v.streak}回連続${v.due?' ／ 次回 '+v.due:''}`} 
-function words(){let all=filtered();let list=all.filter(x=>!search||(x.word+x.reading+x.meaning+x.group).includes(search));let html=`<div class="panel"><h2 class="heading">プリントの語句一覧</h2><p class="sub">読み・意味を確認できます。誤読と思われる項目は「修正」から変更できます。</p><div class="toolbar"><select id="wordPage"><option value="すべて" ${page==='すべて'?'selected':''}>両面</option><option value="表" ${page==='表'?'selected':''}>表</option><option value="裏" ${page==='裏'?'selected':''}>裏</option></select><select id="wordCategory">${categoryOptions()}</select><input id="wordSearch" type="text" placeholder="語句を検索" value="${esc(search)}"></div><div class="flex"><button type="button" class="btn small" id="toggleAnswers">${showAnswers?'意味を隠す':'答えを表示'}</button><span class="sub">${groupEntries(list).length}語を表示</span></div></div><div class="panel" id="wordList">`;
-html+=list.length?groupEntries(list).map(entries=>{const x=entries[0];return `<div class="worditem"><div class="wordhead"><div><span class="tag">${esc(x.group)}</span> <span class="wordtitle">${esc(x.word)}</span></div></div>${entries.map((o,i)=>`<div class="word-sense"><div class="flex" style="margin-top:8px"><span class="sub grow">${entries.length>1?(i+1)+'　':''}${esc(o.side)}</span><button class="btn small ghost" data-edit="${o.id}">修正</button></div>${showAnswers?`<div class="wordbody"><b>${esc(o.reading)}</b><br>${esc(o.meaning)}</div>`:''}<div class="notice">${esc(overviewText(o))}</div></div>`).join('')}</div>`}).join(''):'<div class="empty">一致する語句がありません。</div>';
-return html+'</div>'
+function overviewText(x){const v=memory(x.id);return `${aspects().map(a=>`${aspectLabel(a)}：${badge(state(x.id,a))}`).join(' ／ ')} ／ 定着 ${v.streak}回連続${v.due?' ／ 次回 '+v.due:''}`}
+function listFields(){return fields.filter(f=>!f.hidden&&f.key!==headKey())}
+function editableFields(){return fields.filter(f=>f.type==='text'&&!f.hidden)}
+function words(){const head=fieldMap[headKey()],ck=categoryKey(),sk=sectionKey(),shown=listFields();let all=filtered();let list=all.filter(x=>!search||(textOf(x)+(ck?x[ck]??'':'')).includes(search));
+ let html=`<div class="panel"><h2 class="heading">${esc(deck.labels.list)}</h2><p class="sub">${esc(joinLabels(shown.map(f=>f.label)))}を確認できます。誤りと思われる項目は「修正」から変更できます。</p><div class="toolbar">${sectionOptions('wordPage')}${categorySelect('wordCategory')}<input id="wordSearch" type="text" placeholder="${esc(deck.labels.item)}を検索" value="${esc(search)}"></div><div class="flex"><button type="button" class="btn small" id="toggleAnswers">${showAnswers?'答えを隠す':'答えを表示'}</button><span class="sub">${groupEntries(list).length}${esc(deck.labels.counter)}を表示</span></div></div><div class="panel" id="wordList">`;
+ html+=list.length?groupEntries(list).map(entries=>{const x=entries[0];return `<div class="worditem"><div class="wordhead"><div>${ck?`<span class="tag">${esc(x[ck])}</span> `:''}<span class="wordtitle">${renderValue(head,x[head.key],'list-image')}</span></div></div>${entries.map((o,i)=>`<div class="word-sense"><div class="flex" style="margin-top:8px"><span class="sub grow">${entries.length>1?(i+1)+'　':''}${sk?esc(o[sk]):''}</span>${editableFields().length?`<button class="btn small ghost" data-edit="${o.id}">修正</button>`:''}</div>${showAnswers?`<div class="wordbody">${shown.map((f,n)=>o[f.key]?(n===0&&f.type==='text'?`<b>${esc(o[f.key])}</b>`:renderValue(f,o[f.key],'list-image')):'').filter(Boolean).join('<br>')}</div>`:''}<div class="notice">${esc(overviewText(o))}</div></div>`).join('')}</div>`}).join(''):`<div class="empty">一致する${esc(deck.labels.item)}がありません。</div>`;
+ return html+'</div>'
 }
-function progress(){let x=levelCount(),pct=Math.round(x.master/x.all*100),p=learningStore().progress;let seen=Object.entries(p).filter(([k,z])=>k.startsWith('example:')===(practiceMode==='example')&&z.graded>0).map(([,z])=>z);let wrong=seen.reduce((a,b)=>a+b.wrong,0),c=seen.reduce((a,b)=>a+b.mc+b.free,0);let difficult=items().map(x=>({x,wrong:state(x.id,'r').wrong+state(x.id,'m').wrong})).filter(o=>o.wrong).sort((a,b)=>b.wrong-a.wrong).slice(0,12);
-return stats()+`<div class="panel"><h2 class="heading">定着の進み具合</h2><div class="flex"><strong style="font-size:28px">${pct}%</strong><span class="sub">${x.master} / ${x.all} 項目 定着</span></div><div class="bar"><div style="width:${pct}%"></div></div><p class="sub">読み・意味を両方、自力で正解したら定着1回。初回は翌日、2回目は1週間後、3回目以降は1か月後に復習します。同じ日に繰り返しても回数は進みません。どちらかを間違えると0回・両方四択に戻ります。多義語は語義ごと、語句・例文モードは別管理。学習日は日本時間の朝4時に切り替わります。</p><div class="flex"><div class="stat grow"><strong>${c+wrong?Math.round(c/(c+wrong)*100):0}%</strong><span>累計正答率</span></div><div class="stat grow"><strong>${wrong}</strong><span>累計誤答</span></div></div></div><div class="panel"><h2 class="heading">苦手な語句</h2>${difficult.length?difficult.map(o=>`<div class="worditem"><b>${esc(o.x.word)}</b><span class="item-score">誤答 ${o.wrong} 回</span><div class="sub">${esc(overviewText(o.x))}</div></div>`).join(''):'<p class="sub">まだ誤答の記録はありません。</p>'}</div><div class="panel"><h2 class="heading">データ管理</h2><p class="sub">学習履歴・回答途中の選択・現在の問題は操作ごとに端末内へ自動保存します。再読み込みしても続きから再開できます。別のブラウザやホーム画面のアプリ、別端末には自動同期しません。</p><div class="flex"><button class="btn small" id="export">学習データ保存</button><label class="btn small" style="cursor:pointer">データを復元<input type="file" id="import" accept="application/json,.json" class="hide"></label><button class="btn small danger" id="reset">学習履歴をリセット</button></div></div>`
+function progress(){const list=aspects(),labels=askLabels(),n=list.length,modes=deck.modes;let x=levelCount(),pct=x.all?Math.round(x.master/x.all*100):0,p=learningStore().progress;let seen=Object.entries(p).filter(([k,z])=>belongsToMode(k)&&z.graded>0).map(([,z])=>z);let wrong=seen.reduce((a,b)=>a+b.wrong,0),c=seen.reduce((a,b)=>a+b.mc+b.free,0);let difficult=items().map(x=>({x,wrong:list.reduce((sum,a)=>sum+state(x.id,a).wrong,0)})).filter(o=>o.wrong).sort((a,b)=>b.wrong-a.wrong).slice(0,12);
+ const rule=n===1?`${labels[0]}を自力で正解したら定着1回。`:`${joinLabels(labels)}を${n===2?'両方':'すべて'}、自力で正解したら定着1回。`,reset=n===1?'間違えると0回・四択に戻ります。':`${n===2?'どちらか':'どれか'}を間違えると0回・${n===2?'両方':'すべて'}四択に戻ります。`;
+ const head=fieldMap[headKey()];
+ return stats()+`<div class="panel"><h2 class="heading">定着の進み具合</h2><div class="flex"><strong style="font-size:28px">${pct}%</strong><span class="sub">${x.master} / ${x.all} 項目 定着</span></div><div class="bar"><div style="width:${pct}%"></div></div><p class="sub">${esc(rule)}初回は翌日、2回目は1週間後、3回目以降は1か月後に復習します。同じ日に繰り返しても回数は進みません。${esc(reset)}多義語は語義ごと${modes.length>1?'、'+esc(joinLabels(modes.map(m=>m.label)))+'は別管理':'に管理'}。学習日は日本時間の朝4時に切り替わります。</p><div class="flex"><div class="stat grow"><strong>${c+wrong?Math.round(c/(c+wrong)*100):0}%</strong><span>累計正答率</span></div><div class="stat grow"><strong>${wrong}</strong><span>累計誤答</span></div></div></div><div class="panel"><h2 class="heading">苦手な${esc(deck.labels.item)}</h2>${difficult.length?difficult.map(o=>`<div class="worditem"><b>${renderValue(head,o.x[head.key],'list-image')}</b><span class="item-score">誤答 ${o.wrong} 回</span><div class="sub">${esc(overviewText(o.x))}</div></div>`).join(''):'<p class="sub">まだ誤答の記録はありません。</p>'}</div><div class="panel"><h2 class="heading">データ管理</h2><p class="sub">学習履歴・回答途中の選択・現在の問題は操作ごとに端末内へ自動保存します。再読み込みしても続きから再開できます。別のブラウザやホーム画面のアプリ、別端末には自動同期しません。単語帳ごとに別々に保存されます。</p><div class="flex"><button class="btn small" id="export">学習データ保存</button><label class="btn small" style="cursor:pointer">データを復元<input type="file" id="import" accept="application/json,.json" class="hide"></label><button class="btn small danger" id="reset">学習履歴をリセット</button></div></div>`
 }
 function render(){updateRecordToggle();document.querySelectorAll('nav button').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));app.innerHTML=tab==='quiz'?quiz():tab==='words'?words():progress();bind();save()}
 function bind(){
@@ -472,15 +355,36 @@ if(tab==='quiz'){
 }else{
  document.querySelector('#export')?.addEventListener('click',exportData);
  document.querySelector('#import')?.addEventListener('change',importData);
- document.querySelector('#reset')?.addEventListener('click',()=>{if(confirm('学習履歴をすべてリセットしますか？ 語句の修正は残します。')){const root=learningStore();for(const k of Object.keys(root.progress))if(k.startsWith('example:')===(practiceMode==='example'))delete root.progress[k];if(root.study)delete root.study[practiceMode];answers={};results={};newBatch();render()}});
+ document.querySelector('#reset')?.addEventListener('click',()=>{if(confirm(`学習履歴をすべてリセットしますか？ ${deck.labels.item}の修正は残します。`)){const root=learningStore();for(const k of Object.keys(root.progress))if(belongsToMode(k))delete root.progress[k];if(root.study)delete root.study[practiceMode];answers={};results={};newBatch();render()}});
 }}
 function applyGrade(s,correct,{method=s.level==='choice'?'choice':'recall',day=today()}={}){if(correct){if(method==='choice')s.mc++;else{s.free++;s.streak++}s.level='recall'}else{s.wrong++;s.streak=0;s.level='choice';s.firstFreeDay='';s.laterHit=false}s.last=day;s.graded++}
 function override(k){if(refreshStudyDay())return;const r=results[k],parts=questionKey(k);if(!r||!parts)return;const want=!r.correct,[id,a]=parts,j=journal(id,true),event=j.events.find(e=>e.id===r.eventId);if(event){event.correct=want;replayStudy(id)}else{const s=clone(r.before);applyGrade(s,want);j.base[a]=s;replayStudy(id)}r.correct=want;const history=learningStore().history[r.historyIndex];if(history)history.correct+=want?1:-1;refreshQuestion(k)}
-function openEdit(id){editId=id;let x=item(id);document.querySelector('#editWord').value=x.word;document.querySelector('#editReading').value=x.reading;document.querySelector('#editMeaning').value=x.meaning;document.querySelector('#editor').showModal()}
+function openEdit(id){editId=id;const x=item(id);document.querySelector('#editTitle').textContent=deck.labels.item+'を修正';document.querySelector('#editFields').innerHTML=editableFields().map(f=>`<label for="edit-${f.key}">${esc(f.label)}</label><input id="edit-${f.key}" data-field="${f.key}" type="text" required value="${esc(x[f.key])}">`).join('');document.querySelector('#editor').showModal()}
 document.querySelector('#editCancel').addEventListener('click',()=>document.querySelector('#editor').close());
-document.querySelector('#editForm').addEventListener('submit',e=>{if(e.submitter?.value!=='save')return;let w=document.querySelector('#editWord').value.trim(),r=document.querySelector('#editReading').value.trim(),m=document.querySelector('#editMeaning').value.trim();if(!w||!r||!m){e.preventDefault();alert('すべて入力してください');return}store.edits[editId]={word:w,reading:r,meaning:m};save();render()});
-function exportData(){const blob=new Blob([JSON.stringify({version:1,store},null,2)],{type:'application/json'});let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='漢文暗記バックアップ_'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function importData(e){let file=e.target.files?.[0];if(!file)return;file.text().then(s=>{let v=JSON.parse(s);if(v.version!==1||!v.store?.progress||!v.store?.edits)throw Error('対応しないデータ');if(confirm('現在の学習データを読み込んだデータに置き換えますか？')){store=prepareStore(v.store);initializeStudy();recording=store.settings.recording!==false;sandbox=recording?null:clone(store);scratchSessions={};activeDay=today();practiceMode=store.practiceMode==='example'?'example':'word';migrateCards();answers={};results={};if(!restoreSession())newBatch();render()}}).catch(err=>alert('読み込みに失敗しました：'+err.message))}
+document.querySelector('#editForm').addEventListener('submit',e=>{if(e.submitter?.value!=='save')return;const edit={};for(const input of document.querySelectorAll('#editFields input')){const v=input.value.trim();if(!v){e.preventDefault();alert('すべて入力してください');return}edit[input.dataset.field]=v}store.edits[editId]=edit;save();render()});
+function exportData(){const blob=new Blob([JSON.stringify({version:1,deck:deck.id,store},null,2)],{type:'application/json'});let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=deck.title+'_バックアップ_'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function importData(e){let file=e.target.files?.[0];if(!file)return;file.text().then(s=>{let v=JSON.parse(s);if(v.version!==1||!v.store?.progress||!v.store?.edits)throw Error('対応しないデータ');if(v.deck&&v.deck!==deck.id)throw Error(`別の単語帳（${v.deck}）のデータです。単語帳を切り替えてから復元してください`);if(confirm(`「${deck.title}」の学習データを読み込んだデータに置き換えますか？`)){store=prepareStore(v.store);initializeStudy();recording=store.settings.recording!==false;sandbox=recording?null:clone(store);scratchSessions={};activeDay=today();practiceMode=validMode(store.practiceMode);migrateCards();answers={};results={};if(!restoreSession())newBatch();render()}}).catch(err=>alert('読み込みに失敗しました：'+err.message))}
+
+// ---------- decks ----------
+function storedDeckId(){try{return localStorage.getItem(DECK_KEY)}catch(e){return null}}
+function renderDeckSlot(){const slot=document.querySelector('#deckSlot');if(!slot)return;
+ if(deckList.length>1){slot.innerHTML=`<select id="deckSelect" class="deck-select" aria-label="単語帳">${deckList.map(d=>`<option value="${esc(d.id)}" ${d.id===deck?.id?'selected':''}>${esc(d.title)}</option>`).join('')}</select>`;slot.querySelector('#deckSelect').addEventListener('change',e=>switchDeck(e.target.value))}
+ else slot.textContent=deck?.description||deck?.title||'';
+}
+function switchDeck(id){if(deck&&id===deck.id)return;save();try{localStorage.setItem(DECK_KEY,id)}catch(e){}location.reload()}
+async function fetchJson(url){const response=await fetch(url);if(!response.ok)throw Error(url+' を読み込めません（'+response.status+'）');return response.json()}
+function showFatal(message){app.innerHTML=`<div class="panel"><h2 class="heading">単語帳を開けません</h2><p class="sub">${esc(message)}</p>${deckList.length>1?'<p class="sub">右上から別の単語帳を選べます。</p>':''}</div>`;renderDeckSlot()}
+async function start(){app.innerHTML='<div class="panel sub">学習データを読み込み中…</div>';
+ try{const list=await fetchJson('decks/index.json');deckList=(list.decks||[]).filter(d=>d&&d.id&&d.file)}catch(e){showFatal('単語帳の一覧（decks/index.json）を読み込めませんでした。'+e.message);return}
+ const entry=deckList.find(d=>d.id===storedDeckId())||deckList[0];
+ if(!entry){showFatal('単語帳がありません。');return}
+ try{deck=prepareDeck(await fetchJson('decks/'+entry.file));if(deck.id!==entry.id)throw Error('decks/index.json と '+entry.file+' の id が一致しません')}catch(e){deck=null;showFatal(entry.title+'：'+e.message);return}
+ setupDeck();store=load();
+ try{const backup=await readBackup();if(validStore(backup)&&(!localLoaded||(backup.savedAt||0)>(store.savedAt||0))){store=prepareStore(backup);localLoaded=true}}catch(e){}
+ practiceMode=validMode(store.practiceMode);migrateCards();initializeStudy();recording=store.settings.recording!==false;if(!recording)sandbox=clone(store);activeDay=today();const scroll=Number(store.session?.scrollY)||0,restored=restoreSession();if(!restored)newBatch();ready=true;render();
+ if(restored)requestAnimationFrame(()=>window.scrollTo({top:scroll,behavior:'instant'}));
+ if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{});
+}
 document.querySelectorAll('nav button').forEach(x=>x.addEventListener('click',()=>{if(!ready)return;tab=x.dataset.tab;render();window.scrollTo({top:0,behavior:'instant'})}));
 // Persist before iOS suspends the page; there is no automatic reload.
 window.addEventListener('pagehide',()=>save());
