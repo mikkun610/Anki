@@ -1,4 +1,4 @@
-const CACHE='anki-v1-2';
+const CACHE='anki-v1-1';
 const CORE=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./decks/index.json'];
 const APP_MARK='<meta name="anki-app"';
 const scope=()=>new URL(self.registration.scope);
