@@ -6,7 +6,6 @@
 - `decks/index.json` — 単語帳の一覧。ここに載せたものが右上のメニューに出る
 - `decks/*.json` — 単語帳1冊につき1ファイル
 - `service-worker.js` — オフライン用。単語帳と、その中で使う画像も自動でキャッシュする
-- `clock/` — 別アプリ「本番時計」（共テ・名大の本番の時刻で大問の区切りを練習する時計）。`clock/index.html` を変えたら `clock/service-worker.js` の `CACHE` の番号を上げる
 
 学習記録は端末内（localStorage と IndexedDB）に単語帳ごとに保存する。
 
